@@ -21,3 +21,5 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080
+
+CMD ["python3", "-m", "flask", "run"]
