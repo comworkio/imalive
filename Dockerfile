@@ -7,9 +7,7 @@ ENV PYTHONUNBUFFERED=1 \
     FLASK_RUN_PORT=8080 \
     WERKZEUG_RUN_MAIN=true \
     MANIFEST_FILE_PATH=/manifest.json \
-    LOG_LEVEL=info \
-    PAGE_SIZE=27 \
-    GITHUB_MAX_PER_PAGE=100
+    WAIT_TIME=60
 
 COPY ./api ./manifest.json /
 
@@ -19,4 +17,3 @@ RUN pip3 install --upgrade pip && \
 EXPOSE 8080
 
 CMD ["python3", "-m", "flask", "run"]
-
