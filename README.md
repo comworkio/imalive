@@ -8,9 +8,9 @@ Just a dummy healthcheck api for your nodes (support armhf for raspberrypi).
 
 ## Git repositories
 
-* Main repo: https://gitlab.comwork.io/oss/imalive-api
-* Github mirror: https://github.com/idrissneumann/imalive-api.git
-* Gitlab mirror: https://gitlab.com/ineumann/imalive-api.git
+* Main repo: https://gitlab.comwork.io/oss/imalive
+* Github mirror: https://github.com/idrissneumann/imalive.git
+* Gitlab mirror: https://gitlab.com/ineumann/imalive.git
 
 ## Image on the dockerhub
 
