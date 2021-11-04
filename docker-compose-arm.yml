@@ -1,0 +1,10 @@
+version: "3.3"
+
+services: 
+  imalive-api:
+    image: comworkio/imalive-api:latest-arm
+    container_name: imalive-api
+    env_file: 
+      - .env
+    ports: 
+      - 8080:8080
