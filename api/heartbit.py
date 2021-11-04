@@ -3,7 +3,7 @@ import os
 from time import sleep
 
 WAIT_TIME = os.environ['WAIT_TIME']
-NODE_NAME = os.environ['NODE_NAME']
+NODE_NAME = os.environ['IMALIVE_NODE_NAME']
 
 def heartbit():
     while True:
