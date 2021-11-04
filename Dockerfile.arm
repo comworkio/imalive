@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED=1 \
     FLASK_RUN_PORT=8080 \
     WERKZEUG_RUN_MAIN=true \
     MANIFEST_FILE_PATH=/manifest.json \
-    WAIT_TIME=60
+    WAIT_TIME=10
 
 COPY ./api ./manifest.json /
 
