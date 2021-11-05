@@ -2,6 +2,8 @@
 
 Just a dummy healthcheck api for your nodes (support armhf for raspberrypi).
 
+It provide a http/restful endpoint that you can use as a healthcheck rule to your loadbalancer and also publish a heartbit in stdout (usefull if you collect it in a log/alerting management system such as elasticstack).
+
 ## Table of content
 
 [[_TOC_]]
@@ -35,7 +37,6 @@ If you want to test on a raspberrypi or any other ARM device, use this command i
 ```shell
 $ docker-compose -f docker-compose-arm.yml up
 ```
-
 ## Endpoints
 
 ### Healthcheck
@@ -51,3 +52,7 @@ $ curl localhost:8080/v1/health
 $ curl localhost:8080/v1/manifest 
 {"version": "1.0", "sha": "1c7cb1f", "arch": "x86"}
 ```
+
+## Heartbit
+
+You can change the wait time between two heartbit with the `WAIT_TIME` environment variable (in seconds).
