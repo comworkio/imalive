@@ -42,7 +42,7 @@ $ docker-compose -f docker-compose-arm.yml up
 
 ```shell
 $ curl localhost:8080/v1/health
-{"status": "ok", "alive": true, "name": "rpirunner8"}
+{"status": "ok", "time": "2021-11-05T06:55:28.274736", "alive": true, "name": "anode"}
 ```
 
 ### Manifests
