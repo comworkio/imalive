@@ -1,5 +1,9 @@
 # Im Alive API
 
+Let your raspberry pi nodes singing like Céline Dion `I'm alive!`.
+
+![celine](./img/celine.jpeg)
+
 Just a dummy healthcheck api for your nodes (support armhf for raspberrypi).
 
 It provide a http/restful endpoint that you can use as a healthcheck rule to your loadbalancer and also publish a heartbit in stdout (usefull if you collect it in a log/alerting management system such as elasticstack).
@@ -56,3 +60,13 @@ $ curl localhost:8080/v1/manifest
 ## Heartbit
 
 You can change the wait time between two heartbit with the `WAIT_TIME` environment variable (in seconds).
+
+Here's an example of stdout heartbit
+
+```shell
+[2021-11-05T07:50:49.942374][anode] I'm alive!
+[2021-11-05T07:50:59.944070][anode] I'm alive!
+[2021-11-05T07:51:09.956750][anode] I'm alive!
+```
+
+You can change `anode` by your node name with the `IMALIVE_NODE_NAME` environment variable.
