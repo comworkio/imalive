@@ -11,8 +11,10 @@ ENV PYTHONUNBUFFERED=1 \
 
 COPY ./api ./manifest.json /
 
-RUN pip3 install --upgrade pip && \
-    pip3 install -r /requirements.txt
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev linux-headers && \
+    pip3 install --upgrade pip && \
+    pip3 install -r /requirements.txt && \
+    apk del .build-deps
 
 EXPOSE 8080
 
