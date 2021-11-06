@@ -1,6 +1,6 @@
 # Im Alive API
 
-Let your raspberry pi nodes singing like Céline Dion `I'm alive!`.
+Let your raspberry pi nodes (or any computer/virtual machines as well) singing like Céline Dion `I'm alive!`.
 
 ![celine](./img/celine.jpeg)
 
