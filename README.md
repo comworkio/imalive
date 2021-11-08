@@ -10,6 +10,8 @@ It provide a http/restful endpoint that you can use as a healthcheck rule to you
 
 BTW we're also providing packages and images for elasticstack (Kibana, Elasticsearch, Filebeat) [here](https://gitlab.comwork.io/oss/elasticstack).
 
+![kibana](./img/kibana.png)
+
 ## Table of content
 
 [[_TOC_]]
