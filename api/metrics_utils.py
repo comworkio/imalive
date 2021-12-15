@@ -1,5 +1,7 @@
+import os
 import psutil
 
+from datetime import datetime
 from psutil._common import bytes2human
 
 def disk_usage():
@@ -44,8 +46,11 @@ def cpu():
     }
 
 def all_metrics():
+    vdate = datetime.now()
     return {
         "status": "ok",
+        'name': os.environ['IMALIVE_NODE_NAME'],
+        'time': vdate.isoformat(),
         "disk_usage": disk_usage(),
         "virtual_memory": virtual_memory(),
         "swap_memory": swap_memory(),
