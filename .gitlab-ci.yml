@@ -10,7 +10,7 @@ mirror:
   only:
     - /^(main.*)$/
   tags:
-    - imalive
+    - mirror
 
 api_x86:
   stage: deliver
