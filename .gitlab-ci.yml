@@ -15,7 +15,7 @@ mirror:
 api_x86:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "x86" "imalive-api" "1.5"
+    - setsid ./ci/docker-deliver.sh "x86" "imalive-api" "1.6"
   only:
     refs:
       - /^(main.*)$/
@@ -31,7 +31,7 @@ api_x86:
 api_arm:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "arm" "imalive-api" "1.5"
+    - setsid ./ci/docker-deliver.sh "arm" "imalive-api" "1.6"
   only:
     refs:
       - /^(main.*)$/
