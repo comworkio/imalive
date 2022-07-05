@@ -48,6 +48,39 @@ If you want to test on a raspberrypi or any other ARM device, use this command i
 ```shell
 $ docker-compose -f docker-compose-arm.yml up
 ```
+
+## Running with K3D (Kubernetes / helm)
+
+Use our helm chart [here](./helm)
+
+### Test with K3D (init the cluster)
+
+```shell
+k3d cluster create localdev --api-port 6550 -p "8089:80@loadbalancer"
+sudo k3d kubeconfig get localdev > ~/.kube/config 
+```
+
+Continue to the next chapter
+
+### Install the helmchart
+
+```shell
+cd helm # all the commands below must be under imalive/helm directory
+kubectl create ns imalive
+helm dependency update
+helm -n imalive install . -f values.yaml --generate-name
+```
+
+### Check the deployment and ingress
+
+```shell
+kubectl -n imalive get deployments
+kubectl -n imalive get pods
+kubectl -n imalive get svc
+kubectl -n imalive get ingress
+curl localhost:8089 -v
+```
+
 ## Endpoints
 
 ### Healthcheck
