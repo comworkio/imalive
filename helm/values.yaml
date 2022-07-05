@@ -2,6 +2,7 @@
 replicas: 1
 public_port: 8089
 restartPolicy: Always
+wait_time: 10
 image:
   path: comworkio/imalive-api
   tag: latest
@@ -9,4 +10,3 @@ image:
 ingress:
   enable: true
   ssl_redirect: "false"
-  
