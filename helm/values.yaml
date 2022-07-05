@@ -1,0 +1,7 @@
+---
+replicas: 1
+public_port: 8089
+restartPolicy: Always
+image:
+  path: comworkio/imalive-api
+  tag: latest

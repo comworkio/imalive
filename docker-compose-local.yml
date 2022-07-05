@@ -4,5 +4,10 @@ services:
   imalive-api:
     image: comworkio/imalive-api:latest
     container_name: imalive-api
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file: 
+      - .env
     ports: 
-      - 8089:8080
+      - 8080:8080

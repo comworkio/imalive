@@ -1,0 +1,23 @@
+---
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" $ }}
+kind: Deployment
+metadata:
+  labels:
+    app: {{ include "common.names.fullname" . }}
+  name: {{ include "common.names.fullname" . }}
+spec:
+  replicas: {{ $.Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "common.names.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "common.names.fullname" . }}
+    spec:
+      containers:
+        - image: {{ print $.Values.image.path ":" $.Values.image.tag}}
+          name: {{ include "common.names.fullname" . }}
+          ports:
+            - containerPort: 8080
+      restartPolicy: {{ $.Values.restartPolicy }}
