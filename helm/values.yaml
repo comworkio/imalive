@@ -5,3 +5,8 @@ restartPolicy: Always
 image:
   path: comworkio/imalive-api
   tag: latest
+
+ingress:
+  enable: true
+  ssl_redirect: "false"
+  

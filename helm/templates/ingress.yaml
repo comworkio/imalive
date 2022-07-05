@@ -1,0 +1,20 @@
+{{- if $.Values.ingress.enable -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: {{ $.Values.ingress.ssl_redirect }}
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "common.names.fullname" . }}
+            port:
+              number: {{ $.Values.public_port }}
+{{- end -}}
