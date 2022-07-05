@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: imalive-api
+    spec:
+      ports:
+        - name: "httm"
+          port: {{ $.Values.public_port }}
+          targetPort: 8080
+      selector:
+        io.kompose.service: imalive-api
+    status:
+      loadBalancer: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: imalive-api
+    spec:
+      replicas: {{ $.Values.replicas }}
+      selector:
+        matchLabels:
+          io.kompose.service: imalive-api
+      strategy: {}
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose-1.24.0 convert -f docker-compose-2f94807e-fc34-11ec-9abd-0242ac120002.yml -o docker-compose-2f94807e-fc34-11ec-9abd-0242ac120002.yml.k8s.yml
+            kompose.version: 1.24.0 (4a2a0458)
+          creationTimestamp: null
+          labels:
+            io.kompose.service: imalive-api
+        spec:
+          containers:
+            - image: comworkio/imalive-api:latest
+              name: imalive-api
+              ports:
+                - containerPort: 8080
+              resources: {}
+          restartPolicy: Always
+    status: {}
+kind: List
+metadata: {}

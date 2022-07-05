@@ -1,0 +1,12 @@
+---
+apiVersion: v2
+name: imalive
+type: application
+version: 1.0.0
+
+dependencies:
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - bitnami-common
+    version: 1.x.x
