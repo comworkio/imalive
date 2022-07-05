@@ -5,7 +5,7 @@ kind: Ingress
 metadata:
   name: {{ include "common.names.fullname" . }}
   annotations:
-    ingress.kubernetes.io/ssl-redirect: {{ $.Values.ingress.ssl_redirect }}
+    ingress.kubernetes.io/ssl-redirect: {{ $.Values.ingress.ssl_redirect | quote }}
 spec:
   rules:
   - http:

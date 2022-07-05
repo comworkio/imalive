@@ -9,4 +9,4 @@ spec:
       port: {{ $.Values.public_port }}
       targetPort: 8080
   selector:
-  app: {{ include "common.names.fullname" . }}
+    app: {{ include "common.names.fullname" . }}

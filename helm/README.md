@@ -3,18 +3,17 @@
 ## k3d init cluster
 
 ```shell
-k3d cluster create localdev --api-port 6550 -p "8089:8089@loadbalancer"
+k3d cluster create localdev --api-port 6550 -p "8089:80@loadbalancer"
 sudo k3d kubeconfig get localdev > ~/.kube/config 
 ```
 
 ## Install the helmchart
 
 ```shell
+cd helm # all the commands below must be under imalive/helm directory
 kubectl create ns imalive
-cd helm
 helm dependency update
-helm create imalive
-helm -n imalive install imalive -f values.yaml --generate-name
+helm -n imalive install . -f values.yaml --generate-name
 ```
 
 ## Check the deployement

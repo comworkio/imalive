@@ -24,5 +24,5 @@ spec:
             - name: IMALIVE_NODE_NAME
               value: {{ include "common.names.fullname" . }}
             - name: WAIT_TIME
-              value: {{ $.Values.wait_time }}
+              value: {{ $.Values.wait_time | quote }}
       restartPolicy: {{ $.Values.restartPolicy }}
