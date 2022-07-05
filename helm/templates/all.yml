@@ -4,33 +4,33 @@ items:
   - apiVersion: v1
     kind: Service
     metadata:
-      name: imalive-api
+      name: {{ include "common.names.fullname" . }}
     spec:
       ports:
         - name: "http"
           port: {{ $.Values.public_port }}
           targetPort: 8080
       selector:
-        app: imalive-api
+        app: {{ include "common.names.fullname" . }}
   - apiVersion: {{ include "common.capabilities.deployment.apiVersion" $ }}
     kind: Deployment
     metadata:
       labels:
-        app: imalive-api
-      name: imalive-api
+        app: {{ include "common.names.fullname" . }}
+      name: {{ include "common.names.fullname" . }}
     spec:
       replicas: {{ $.Values.replicas }}
       selector:
         matchLabels:
-          app: imalive-api
+          app: {{ include "common.names.fullname" . }}
       template:
         metadata:
           labels:
-            app: imalive-api
+            app: {{ include "common.names.fullname" . }}
         spec:
           containers:
-            - image: comworkio/imalive-api:latest
-              name: imalive-api
+            - image: {{ print $.Values.image.path ":" $.Values.image.tag}}
+              name: {{ include "common.names.fullname" . }}
               ports:
                 - containerPort: 8080
           restartPolicy: {{ $.Values.restartPolicy }}
