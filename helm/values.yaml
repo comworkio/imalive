@@ -1,6 +1,6 @@
 ---
 replicas: 1
-public_port: 8089
+service_port: 8089
 restartPolicy: Always
 wait_time: 10
 image:

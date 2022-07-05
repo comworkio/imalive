@@ -16,5 +16,5 @@ spec:
           service:
             name: {{ include "common.names.fullname" . }}
             port:
-              number: {{ $.Values.public_port }}
+              number: {{ $.Values.service_port }}
 {{- end -}}

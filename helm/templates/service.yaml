@@ -6,7 +6,7 @@ metadata:
 spec:
   ports:
     - name: "http"
-      port: {{ $.Values.public_port }}
+      port: {{ $.Values.service_port }}
       targetPort: 8080
   selector:
     app: {{ include "common.names.fullname" . }}
