@@ -2,7 +2,7 @@ def is_not_empty (var):
     if (isinstance(var, bool)):
         return var
     elif (isinstance(var, int)):
-        return False
+        return True
     empty_chars = ["", "null", "nil", "false", "none"]
     return var is not None and not any(c == "{}".format(var).lower() for c in empty_chars)
 
