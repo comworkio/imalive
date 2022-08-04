@@ -1,0 +1,4 @@
+---
+imalive_api_version: 1.7
+imalive_port: 8099
+imalive_wait_time: 300

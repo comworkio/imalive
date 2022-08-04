@@ -1,0 +1,12 @@
+version: "3.3"
+
+services: 
+  imalive-api:
+    image: comworkio/imalive-api:{{ imalive_api_version }}-x86
+    container_name: imalive-api
+    restart: always
+    environment: 
+      - WAIT_TIME={{ imalive_wait_time }}
+      - IMALIVE_NODE_NAME={{ node_name }}
+    ports: 
+      - {{ imalive_port }}:8080

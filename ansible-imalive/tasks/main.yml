@@ -1,0 +1,14 @@
+
+---
+- name: Create imalive docker-compose file
+  become: yes
+  template:
+    src: "{{ item.template }}.j2"
+    dest: "{{ item.path }}/{{ item.template }}"
+    mode: '0644'
+  with_items:
+    - { template: docker-compose-imalive.yml , path: "{{ node_home }}" }
+
+- name: Run the container
+  become: yes
+  command: "docker-compose -f {{ node_home }}/docker-compose-imalive.yml up -d --force-recreate"
