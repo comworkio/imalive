@@ -1,10 +1,10 @@
 # Im Alive API
 
-Let your raspberry pi nodes (or any computer/virtual machines as well) singing like Céline Dion `I'm alive!`.
+Let your raspberry pi nodes (or any computer/virtual machines as well) sing like Céline Dion `I'm alive!`.
 
 ![celine](./img/celine.jpeg)
 
-Just a dummy healthcheck api for your nodes (support armhf for raspberrypi).
+Just a dummy healthcheck api for your nodes (support x86 and armhf for raspberrypi). It's also supported by [comwork cloud](https://doc.cloud.comwork.io/docs/tutorials/imalive).
 
 It provide a http/restful endpoint that you can use as a healthcheck rule to your loadbalancer and also publish a heartbit in stdout (usefull if you collect it in a log/alerting management system such as elasticstack).
 
@@ -29,7 +29,13 @@ The image is available and versioned here: https://hub.docker.com/r/comworkio/im
 
 An example of raspberrypi's cluster exposed with this API in public: https://imalive.comwork.io
 
-## Running with docker-compose
+## Getting started
+
+### Running with ansible
+
+You can use this [ansible role](./ansible-imalive).
+
+### Running with docker-compose
 
 First create your `.env` file from the `.env.example`:
 
@@ -49,11 +55,11 @@ If you want to test on a raspberrypi or any other ARM device, use this command i
 $ docker-compose -f docker-compose-arm.yml up
 ```
 
-## Running with K3D (Kubernetes / helm)
+### Running with K3D (Kubernetes / helm)
 
 Use our helm chart [here](./helm)
 
-### Test with K3D (init the cluster)
+#### Test with K3D (init the cluster)
 
 ```shell
 k3d cluster create localdev --api-port 6550 -p "8089:80@loadbalancer"
@@ -62,7 +68,7 @@ sudo k3d kubeconfig get localdev > ~/.kube/config
 
 Continue to the next chapter
 
-### Install the helmchart
+#### Install the helmchart
 
 ```shell
 cd helm # all the commands below must be under imalive/helm directory
@@ -71,7 +77,7 @@ helm dependency update
 helm -n imalive install . -f values.yaml --generate-name
 ```
 
-### Check the deployment and ingress
+#### Check the deployment and ingress
 
 ```shell
 kubectl -n imalive get deployments
