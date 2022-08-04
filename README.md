@@ -27,7 +27,7 @@ BTW we're also providing packages and images for elasticstack (Kibana, Elasticse
 
 The image is available and versioned here: https://hub.docker.com/r/comworkio/imalive-api
 
-An example of raspberrypi's cluster exposed with this API in public: https://imalive.comwork.io
+An example of exposed API instance: https://imalive.comwork.io
 
 ## Getting started
 
