@@ -1,14 +1,9 @@
-import os
-
-from datetime import datetime
+from health_utils import health
 from flask_restful import Resource
 
 class HealthEndPoint(Resource):
+    def post(self):
+        return health();
+
     def get(self):
-        vdate = datetime.now()
-        return {
-            'status': 'ok',
-            'time': vdate.isoformat(),
-            'alive': True,
-            'name': os.environ['IMALIVE_NODE_NAME']
-        }
+        return health();
