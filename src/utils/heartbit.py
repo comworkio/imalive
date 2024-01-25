@@ -2,8 +2,8 @@ import os
 
 from datetime import datetime
 from time import sleep
-from metrics_utils import all_metrics
-from common_utils import is_true
+from utils.metrics import all_metrics
+from utils.common import is_true
 
 WAIT_TIME = int(os.environ['WAIT_TIME'])
 NODE_NAME = os.environ['IMALIVE_NODE_NAME']

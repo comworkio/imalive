@@ -1,0 +1,6 @@
+werkzeug==2.0.0
+fastapi[all]
+requests
+uvicorn[standard]
+fastapi-utils
+psutil
