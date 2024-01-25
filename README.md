@@ -1,8 +1,16 @@
-# Im Alive API
+# Im Alive
+
+👋 Welcome to Im Alive API!
+
+<p align="center">
+    <img src="./img/logo.png"/>
+</p>
 
 Let your raspberry pi nodes (or any computer/virtual machines as well) sing like Céline Dion `I'm alive!`.
 
-![celine](./img/celine.jpeg)
+<p align="center">
+    <img src="./img/celine.jpeg"/>
+</p>
 
 Just a dummy healthcheck api for your nodes (support x86 and armhf for raspberrypi). It's also supported by [comwork cloud](https://doc.cloud.comwork.io/docs/tutorials/imalive).
 
@@ -47,6 +55,12 @@ Then replace the values (like the `IMALIVE_NODE_NAME` with your node name). Then
 
 ```shell
 $ docker-compose up
+```
+
+For the developers you can test your changes on the app by running this command:
+
+```shell
+docker-compose -f docker-compose-local.yml up --build --force-recreate 
 ```
 
 If you want to test on a raspberrypi or any other ARM device, use this command instead:

@@ -1,0 +1,14 @@
+version: "3.3"
+
+services:
+  imalive-api:
+    restart: always
+    image: imalive-api:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: api
+    env_file: 
+      - .env
+    ports:
+      - "8080:8080"
