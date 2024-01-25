@@ -62,6 +62,7 @@ For the developers you can test your changes on the app by running this command:
 ```shell
 docker-compose -f docker-compose-local.yml up --build --force-recreate 
 ```
+
 You can check the API on [localhost:8080/docs](http://localhost:8080/docs) to see the Swagger docs.
 
 If you want to test on a raspberrypi or any other ARM device, use this command instead:
