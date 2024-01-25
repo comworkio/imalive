@@ -2,14 +2,24 @@ import os
 
 from fastapi import FastAPI
 from multiprocessing import Process
-from utils.heartbit import heartbit
+
 from restful_ressources import import_ressources
+
+from utils.common import is_not_empty
+from utils.manifests import get_manifest
+from utils.heartbit import heartbit
+
+version = "unkown"
+manifest = get_manifest()
+
+if "version" in manifest and is_not_empty(manifest['version']):
+    version = manifest['version']
 
 app = FastAPI(
     docs_url="/docs",
     title="Imalive API Documentation",
-    version = os.environ['APP_VERSION'],
-    description="Official Iamalive API Swagger documentation"
+    version = version,
+    description="Official Imalive API Swagger documentation"
 )
 
 async_process = Process( 
