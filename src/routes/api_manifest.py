@@ -7,9 +7,9 @@ router = APIRouter()
 
 @router.get("")
 def get_manifest():
-    try:
-        with open(os.environ['MANIFEST_FILE_PATH']) as manifest_file:
-            manifest = json.load(manifest_file)
-            return manifest
-    except IOError as err:
-        return JSONResponse(content={'status': 'error', 'reason': err}, status_code=500)
+    manifest = get_manifest()
+
+    if manifest['status'] == 'error':
+        return JSONResponse(content=manifest, status_code=500)
+    else:
+        return manifest
