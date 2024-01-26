@@ -140,4 +140,4 @@ Here's an example of stdout heartbit:
 
 You can change `anode` by your node name with the `IMALIVE_NODE_NAME` environment variable.
 
-You also can log only a json output by activating the `LOG_FORMAT` environment variable (with `yes` or `true`).
+You also can log only a json output by making the environment variable `LOG_FORMAT` equal "json".
