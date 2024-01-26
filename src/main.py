@@ -6,11 +6,11 @@ from multiprocessing import Process
 from restful_ressources import import_ressources
 
 from utils.common import is_not_empty
-from utils.manifests import get_manifest
+from utils.manifests import get_manifest_as_dict
 from utils.heartbit import heartbit
 
 version = "unkown"
-manifest = get_manifest()
+manifest = get_manifest_as_dict()
 
 if "version" in manifest and is_not_empty(manifest['version']):
     version = manifest['version']

@@ -3,10 +3,6 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-@router.get("")
-def get_health():
-    return health()
-
-@router.post("")
-def post_health():
+@router.get("/")
+def get_root():
     return health()
