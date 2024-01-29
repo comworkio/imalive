@@ -2,11 +2,12 @@ FROM python:3-alpine AS api
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=UTF-8 \
+    LOG_LEVEL="INFO" \
     LISTEN_ADDR="0.0.0.0" \
     LISTEN_PORT=8080 \
     MANIFEST_FILE_PATH=manifest.json \
     WAIT_TIME=10 \
-    HEART_BIT_LOG_JSON=no
+    LOG_FORMAT="json"
 
 WORKDIR /app
 
