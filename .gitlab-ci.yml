@@ -2,6 +2,7 @@ stages:
   - publish
   - deliver
   - deploy
+  - test
 
 mirror:
   stage: publish
@@ -15,7 +16,7 @@ mirror:
 api_x86:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "x86" "imalive-api" "2.2"
+    - setsid ./ci/docker-deliver.sh "x86" "imalive-api" "2.3"
   only:
     refs:
       - /^(main.*)$/
@@ -31,7 +32,7 @@ api_x86:
 api_arm:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "arm" "imalive-api" "2.2"
+    - setsid ./ci/docker-deliver.sh "arm" "imalive-api" "2.3"
   only:
     refs:
       - /^(main.*)$/
@@ -43,3 +44,19 @@ api_arm:
       - Dockerfile.arm
   tags:
     - buildarm
+
+unit_test:
+  stage: test
+  script:
+    - setsid ./ci/test.sh
+  only:
+    refs:
+      - /^(main.*)$/
+      - merge_requests
+    changes:
+      - .gitlab-ci.yml
+      - api/*
+      - ci/test.sh
+      - Dockerfile
+  tags:
+    - training_unittest

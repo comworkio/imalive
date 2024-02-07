@@ -23,3 +23,9 @@ COPY . /app/
 EXPOSE 8080
 
 CMD ["python3", "src/app.py"]
+
+FROM api AS unit_tests
+
+WORKDIR /app/src
+
+CMD ["python", "-m", "unittest", "discover", "-s", "./tests", "-p", "test_*.py", "-v"]

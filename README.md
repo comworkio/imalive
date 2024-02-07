@@ -57,12 +57,6 @@ Then replace the values (like the `IMALIVE_NODE_NAME` with your node name). Then
 $ docker-compose up
 ```
 
-For the developers you can test your changes on the app by running this command:
-
-```shell
-docker-compose -f docker-compose-local.yml up --build --force-recreate 
-```
-
 You can check the API on [localhost:8080/docs](http://localhost:8080/docs) to see the Swagger docs.
 
 If you want to test on a raspberrypi or any other ARM device, use this command instead:
@@ -141,3 +135,17 @@ Here's an example of stdout heartbit:
 You can change `anode` by your node name with the `IMALIVE_NODE_NAME` environment variable.
 
 You also can log only a json output by making the environment variable `LOG_FORMAT` equal "json".
+
+## Development
+
+For the developers you can test your changes on the app by running this command:
+
+```shell
+docker-compose -f docker-compose-local.yml up --build --force-recreate 
+```
+
+You can also run unit tests by running this command:
+
+```shell
+docker-compose -f docker-compose-local.yml up --build --abort-on-container-exit imalive-tests 
+```
