@@ -7,5 +7,5 @@ def health():
         'status': 'ok',
         'time': vdate.isoformat(),
         'alive': True,
-        'name': os.environ['IMALIVE_NODE_NAME']
+        'name': os.environ.get('IMALIVE_NODE_NAME', 'anode')
     }

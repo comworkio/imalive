@@ -10,6 +10,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+__pycache__
 
 .~lock.cv_en.odt#
 .~lock.cv_fr.odt#
