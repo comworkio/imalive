@@ -27,7 +27,7 @@ BTW we're also providing packages and images for elasticstack (Kibana, Elasticse
 ## Git repositories
 
 * Main repo: https://gitlab.comwork.io/oss/imalive
-* Github mirror: https://github.com/idrissneumann/imalive.git
+* Github mirror: https://github.com/comworkio/imalive.git
 * Gitlab mirror: https://gitlab.com/ineumann/imalive.git
 * Bitbucket mirror: https://idrissneumann@bitbucket.org/idrissneumann/imalive.git
 
