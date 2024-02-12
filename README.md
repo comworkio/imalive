@@ -119,6 +119,33 @@ $ curl localhost:8080/v1/metrics
 {"status": "ok", "disk_usage": {"total": 102.11687469482422, "used": 22.499202728271484, "free": 74.402099609375}, "virtual_memory": {"total": "1.9G", "available": "984.7M"}, "swap_memory": {"total": "1024.0M", "used": "493.1M", "free": "530.9M", "percent": 48.2}, "cpu": {"percent": {"all": 2.8, "percpu": [5.0, 4.0, 3.0, 2.0]}, "count": {"all": 4, "with_logical": 4}, "times": {"all": [10665.39, 7.0, 4718.91, 400345.0, 156.08, 0.0, 226.8, 0.0, 0.0, 0.0], "percpu": [[2488.92, 1.24, 1196.15, 100191.67, 38.08, 0.0, 82.3, 0.0, 0.0, 0.0], [2757.78, 1.63, 1196.16, 99992.0, 37.88, 0.0, 55.78, 0.0, 0.0, 0.0], [2704.56, 2.05, 1162.12, 100082.77, 40.01, 0.0, 47.75, 0.0, 0.0, 0.0], [2714.11, 2.06, 1164.46, 100078.54, 40.1, 0.0, 40.96, 0.0, 0.0, 0.0]]}}}
 ```
 
+### Metrics for prometheus
+
+If you want to use `imalive` as a metrics exporter, this is the way:
+
+```shell
+$ curl localhost:8080/v1/prom
+# HELP cpu_all cpu usage in percent
+# TYPE cpu_all gauge
+cpu_all 0.2
+# HELP ram_total total of ram
+# TYPE ram_total gauge
+ram_total 5.1
+# HELP ram_available available ram
+# TYPE ram_available gauge
+ram_available 4.4
+# HELP disk_free free storage's space
+# TYPE disk_free gauge
+disk_free 43.546470642089844
+# HELP disk_used used storage's space
+# TYPE disk_used gauge
+disk_used 12.563823699951172
+# HELP disk_total total storage's space
+# TYPE disk_total gauge
+disk_total 56.096561431884766
+# HELP imalive_imalive_http_reques
+```
+
 ## Heartbit
 
 You can change the wait time between two heartbit with the `WAIT_TIME` environment variable (in seconds).
@@ -135,16 +162,6 @@ You can change `anode` by your node name with the `IMALIVE_NODE_NAME` environmen
 
 You also can log only a json output by making the environment variable `LOG_FORMAT` equal "json".
 
-## Development
+## Development / contributions
 
-For the developers you can test your changes on the app by running this command:
-
-```shell
-docker-compose -f docker-compose-local.yml up --build --force-recreate 
-```
-
-You can also run unit tests by running this command:
-
-```shell
-docker-compose -f docker-compose-local.yml up --build --abort-on-container-exit imalive-tests 
-```
+Go see this [documentation](./CONTRIBUTING.md)

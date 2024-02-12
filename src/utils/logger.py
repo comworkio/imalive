@@ -4,6 +4,8 @@ import logging
 import json
 import sys
 
+from datetime import datetime
+
 from utils.common import is_disabled, is_enabled, is_true
 
 SLACK_WEBHOOK_TPL = "https://hooks.slack.com/services/{}"
@@ -11,6 +13,7 @@ DISCORD_WEBHOOK_TPL = "https://discord.com/api/webhooks/{}/slack"
 
 LOG_LEVEL = os.environ['LOG_LEVEL']
 LOG_FORMAT = os.getenv('LOG_FORMAT')
+NODE_NAME = os.environ['IMALIVE_NODE_NAME']
 
 _slack_token = os.getenv('SLACK_TOKEN')
 _slack_public_token = os.getenv('SLACK_TOKEN_PUBLIC')
@@ -89,9 +92,10 @@ else:
     logging.basicConfig(stream = sys.stdout, level = "INFO")
 
 def quiet_log_msg (log_level, message):
-    formatted_log = "[{}] {}".format(log_level, message)
+    vdate = datetime.now().isoformat()
+    formatted_log = "[{}][{}][{}] {}".format(log_level, vdate, NODE_NAME, message)
     if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json":
-        formatted_log = json.dumps({"body": message, "level": log_level})
+        formatted_log = json.dumps({"body": message, "level": log_level, "time": vdate, "node": NODE_NAME})
 
     if is_debug(log_level):
         logging.debug(formatted_log)

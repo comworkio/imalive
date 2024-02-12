@@ -3,3 +3,4 @@ requests
 uvicorn[standard]
 fastapi-utils
 psutil
+prometheus-fastapi-instrumentator
