@@ -1,4 +1,8 @@
+import asyncio
+
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
+
 from multiprocessing import Process
 
 from restful_ressources import import_ressources
@@ -20,10 +24,12 @@ app = FastAPI(
     description="Official Imalive API Swagger documentation"
 )
 
-async_process = Process( 
-    target=heartbit,
-    daemon=True
-)
-async_process.start()
+instrumentator = Instrumentator()
+
+heartbit()
+
+instrumentator.instrument(app, metric_namespace='imalive', metric_subsystem='imalive')
+instrumentator.expose(app, endpoint='/v1/prom')
+instrumentator.expose(app, endpoint='/prom')
 
 import_ressources(app)
