@@ -17,6 +17,10 @@ ram_available_gauge = create_gauge("ram_available", "available ram")
 disk_free_gauge = create_gauge("disk_free", "free storage's space")
 disk_used_gauge = create_gauge("disk_used", "used storage's space")
 disk_total_gauge = create_gauge("disk_total", "total storage's space")
+swap_free_gauge = create_gauge("swap_free", "free swap")
+swap_used_gauge = create_gauge("swap_used", "used swap")
+swap_total_gauge = create_gauge("swap_total", "total swap")
+swap_percent_gauge = create_gauge("swap_percent", "percent swap")
 
 def heartbit():
     def loop_heartbit():
@@ -29,6 +33,10 @@ def heartbit():
             set_gauge(disk_free_gauge, metrics['disk_usage']['free'])
             set_gauge(disk_used_gauge, metrics['disk_usage']["used"])
             set_gauge(disk_total_gauge, metrics['disk_usage']["total"])
+            set_gauge(swap_free_gauge, metrics['swap_memory']['free'])
+            set_gauge(swap_used_gauge, metrics['swap_memory']["used"])
+            set_gauge(swap_total_gauge, metrics['swap_memory']["total"])
+            set_gauge(swap_percent_gauge, metrics['swap_memory']["percent"])
             sleep(WAIT_TIME)
 
     def start_heartbit():
