@@ -13,7 +13,7 @@ DISCORD_WEBHOOK_TPL = "https://discord.com/api/webhooks/{}/slack"
 
 LOG_LEVEL = os.environ['LOG_LEVEL']
 LOG_FORMAT = os.getenv('LOG_FORMAT')
-NODE_NAME = os.environ['IMALIVE_NODE_NAME']
+NODE_NAME = os.getenv('IMALIVE_NODE_NAME', "anode")
 
 _slack_token = os.getenv('SLACK_TOKEN')
 _slack_public_token = os.getenv('SLACK_TOKEN_PUBLIC')
@@ -116,3 +116,4 @@ def log_msg(log_level, message, is_public = False):
     if get_int_value_level(log_level) >= get_int_value_level(LOG_LEVEL) and is_notif_enabled():
         slack_message(log_level, message, is_public)
         discord_message(log_level, message, is_public)
+
