@@ -4,20 +4,34 @@ import psutil
 from datetime import datetime
 from psutil._common import bytes2human
 
+from utils.logger import log_msg
+
 def disk_usage():
     dd = psutil.disk_usage('/')
     div = (1024.0 ** 3)
+    total_gb = dd.total / div
+    used_gb = dd.used / div
+    free_gb = dd.free / div
+    percent_used = (used_gb / total_gb) * 100
+
     return {
-        "total": dd.total / div,
-        "used": dd.used / div,
-        "free": dd.free / div
+        "total": total_gb,
+        "used": used_gb,
+        "free": free_gb,
+        "percent": percent_used
     }
 
 def virtual_memory():
     mem = psutil.virtual_memory()
+    total = bytes2human(mem.total)
+    available = bytes2human(mem.available)
+    used = bytes2human(mem.used)
+    percent_used = (mem.used / mem.total) * 100
     return {
-        "total": bytes2human(mem.total),
-        "available": bytes2human(mem.available)
+        "total": total,
+        "used": used,
+        "available": available,
+        "percent": percent_used,
     }
 
 def swap_memory():
@@ -56,3 +70,9 @@ def all_metrics():
         "swap_memory": swap_memory(),
         "cpu": cpu()
     }
+
+def check_and_log_usage(metric_type, metric_value, warning_threshold, error_threshold):
+    if metric_value > warning_threshold:
+        log_msg("WARN", f"[metrics] {metric_type} usage is above {warning_threshold}%: {metric_value}%")
+    elif metric_value > error_threshold:
+        log_msg("ERROR", f"[metrics] {metric_type} usage is above {error_threshold}%: {metric_value}%")
