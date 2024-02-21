@@ -33,7 +33,6 @@ def heartbit():
     def loop_heartbit():
         while True:
             metrics = all_metrics()
-            log_msg("INFO", "[metrics] I'm alive! metrics = {}".format(metrics))
             set_gauge(cpu_gauge, metrics['cpu']['percent']['all'])
             set_gauge(ram_total_gauge, metrics['virtual_memory']['total'])
             set_gauge(ram_available_gauge, metrics['virtual_memory']['available'])
@@ -52,7 +51,7 @@ def heartbit():
             check_and_log_usage('Swap', metrics['swap_memory']['percent'], WARNING_THRESHOLD, ERROR_THRESHOLD)
             check_and_log_usage('CPU', metrics['cpu']['percent']['all'], WARNING_THRESHOLD, ERROR_THRESHOLD)
 
-            log_msg("INFO", all_metrics() if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json" else "[metrics] I'm alive! metrics = {}".format(all_metrics()))
+            log_msg("INFO", metrics if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json" else "[metrics] I'm alive! metrics = {}".format(metrics))
 
             sleep(WAIT_TIME)
 
