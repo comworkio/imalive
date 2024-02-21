@@ -25,4 +25,8 @@ spec:
               value: {{ include "common.names.fullname" . }}
             - name: WAIT_TIME
               value: {{ $.Values.wait_time | quote }}
+            - name: LOG_LEVEL
+              value: {{ $.Values.log.level | quote }}
+            - name: LOG_FORMAT
+              value: {{ $.Values.log.format | quote }}
       restartPolicy: {{ $.Values.restartPolicy }}

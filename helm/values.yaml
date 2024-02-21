@@ -7,6 +7,10 @@ image:
   path: comworkio/imalive-api
   tag: latest
 
+log:
+  level: INFO
+  format: json
+
 ingress:
   enable: true
   ssl_redirect: "false"
