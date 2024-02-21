@@ -95,7 +95,13 @@ def quiet_log_msg (log_level, message):
     vdate = datetime.now().isoformat()
     formatted_log = "[{}][{}][{}] {}".format(log_level, vdate, NODE_NAME, message)
     if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json":
-        formatted_log = json.dumps({"body": message, "level": log_level, "time": vdate, "node": NODE_NAME})
+        if isinstance(message, dict):
+            message['level'] = log_level
+            message['time'] = vdate
+            message['node'] = NODE_NAME
+            formatted_log = json.dumps(message)
+        else:
+            formatted_log = json.dumps({"body": message, "level": log_level, "time": vdate, "node": NODE_NAME})
 
     if is_debug(log_level):
         logging.debug(formatted_log)

@@ -52,14 +52,10 @@ def heartbit():
             check_and_log_usage('Swap', metrics['swap_memory']['percent'], WARNING_THRESHOLD, ERROR_THRESHOLD)
             check_and_log_usage('CPU', metrics['cpu']['percent']['all'], WARNING_THRESHOLD, ERROR_THRESHOLD)
 
-            if is_enabled(LOG_FORMAT):
-                log_msg("INFO", "[metrics] I'm alive! metrics = {}".format(all_metrics()))
-            else:
-                vdate = datetime.now()
-                print("[{}][{}] I'm alive! metrics = {}".format(vdate.isoformat(), NODE_NAME, metrics))
+            log_msg("INFO", all_metrics() if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json" else "[metrics] I'm alive! metrics = {}".format(all_metrics()))
 
             sleep(WAIT_TIME)
-            
+
 
     def start_heartbit():
         loop = asyncio.new_event_loop()
