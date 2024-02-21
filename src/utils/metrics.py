@@ -71,8 +71,12 @@ def all_metrics():
         "cpu": cpu()
     }
 
+def log_usage_if_needed(level, current_value, threshold, type):
+    if current_value > threshold:
+        log_msg(level, f"[metrics] {type} usage is above {threshold}%: {current_value}%")
+        return True
+    return False
+
 def check_and_log_usage(metric_type, metric_value, warning_threshold, error_threshold):
-    if metric_value > warning_threshold:
-        log_msg("WARN", f"[metrics] {metric_type} usage is above {warning_threshold}%: {metric_value}%")
-    elif metric_value > error_threshold:
-        log_msg("ERROR", f"[metrics] {metric_type} usage is above {error_threshold}%: {metric_value}%")
+    if not log_usage_if_needed("ERROR", metric_value, error_threshold, metric_type):
+        log_usage_if_needed("WARN", metric_value, warning_threshold, metric_type)

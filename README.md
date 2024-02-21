@@ -63,13 +63,6 @@ If you want to test on a raspberrypi or any other ARM device, use this command i
 ```shell
 $ docker-compose -f docker-compose-arm.yml up
 ```
-#### Unit tests
-
-To run the unit tests locally you can ran this command:
-
-```shell
-docker-compose -f docker-compose-local.yml up --build --abort-on-container-exit imalive-tests
-```
 
 ### Running with K3D (Kubernetes / helm)
 
