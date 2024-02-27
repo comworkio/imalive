@@ -3,8 +3,6 @@ import asyncio
 from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from multiprocessing import Process
-
 from restful_ressources import import_ressources
 
 from utils.common import is_not_empty

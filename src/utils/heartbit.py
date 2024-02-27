@@ -29,32 +29,47 @@ swap_used_gauge = create_gauge("swap_used", "used swap")
 swap_total_gauge = create_gauge("swap_total", "total swap")
 swap_percent_gauge = create_gauge("swap_percent", "percent swap")
 
+def cpu(metrics):
+    cpu_usage_percent = metrics['cpu']['percent']['all']
+    set_gauge(cpu_gauge, cpu_usage_percent)
+    check_and_log_usage('CPU', cpu_usage_percent, WARNING_THRESHOLD, ERROR_THRESHOLD)
+
+def ram(metrics):
+    memory_usage_percent = metrics['virtual_memory']['percent']
+    set_gauge(ram_total_gauge, metrics['virtual_memory']['total'])
+    set_gauge(ram_available_gauge, metrics['virtual_memory']['available'])
+    set_gauge(ram_percent_gauge, memory_usage_percent)
+    check_and_log_usage('Memory', memory_usage_percent, WARNING_THRESHOLD, ERROR_THRESHOLD)
+
+def swap(metrics):
+    swap_usage_percent = metrics['swap_memory']['percent']
+    set_gauge(swap_free_gauge, metrics['swap_memory']['free'])
+    set_gauge(swap_used_gauge, metrics['swap_memory']['used'])
+    set_gauge(swap_total_gauge, metrics['swap_memory']['total'])
+    set_gauge(swap_percent_gauge, swap_usage_percent)
+    check_and_log_usage('Swap', swap_usage_percent, WARNING_THRESHOLD, ERROR_THRESHOLD)
+
+def disc(metrics):
+    disc_usage_percent = metrics['disk_usage']['percent']
+    set_gauge(disk_free_gauge, metrics['disk_usage']['free'])
+    set_gauge(disk_used_gauge, metrics['disk_usage']['used'])
+    set_gauge(disk_total_gauge, metrics['disk_usage']['total'])
+    set_gauge(disk_percent_gauge, disc_usage_percent)
+    check_and_log_usage('Disk', disc_usage_percent, WARNING_THRESHOLD, ERROR_THRESHOLD)
+
 def heartbit():
     def loop_heartbit():
         while True:
             metrics = all_metrics()
-            set_gauge(cpu_gauge, metrics['cpu']['percent']['all'])
-            set_gauge(ram_total_gauge, metrics['virtual_memory']['total'])
-            set_gauge(ram_available_gauge, metrics['virtual_memory']['available'])
-            set_gauge(ram_percent_gauge, metrics['virtual_memory']['percent'])
-            set_gauge(disk_free_gauge, metrics['disk_usage']['free'])
-            set_gauge(disk_used_gauge, metrics['disk_usage']["used"])
-            set_gauge(disk_percent_gauge, metrics['disk_usage']["percent"])
-            set_gauge(disk_total_gauge, metrics['disk_usage']["total"])
-            set_gauge(swap_free_gauge, metrics['swap_memory']['free'])
-            set_gauge(swap_used_gauge, metrics['swap_memory']["used"])
-            set_gauge(swap_total_gauge, metrics['swap_memory']["total"])
-            set_gauge(swap_percent_gauge, metrics['swap_memory']["percent"])
 
-            check_and_log_usage('Disk', metrics['disk_usage']['percent'], WARNING_THRESHOLD, ERROR_THRESHOLD)
-            check_and_log_usage('Memory', metrics['virtual_memory']['percent'], WARNING_THRESHOLD, ERROR_THRESHOLD)
-            check_and_log_usage('Swap', metrics['swap_memory']['percent'], WARNING_THRESHOLD, ERROR_THRESHOLD)
-            check_and_log_usage('CPU', metrics['cpu']['percent']['all'], WARNING_THRESHOLD, ERROR_THRESHOLD)
+            cpu(metrics)
+            ram(metrics)
+            swap(metrics)
+            disc(metrics)
 
             log_msg("INFO", metrics if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json" else "[metrics] I'm alive! metrics = {}".format(metrics))
 
             sleep(WAIT_TIME)
-
 
     def start_heartbit():
         loop = asyncio.new_event_loop()
