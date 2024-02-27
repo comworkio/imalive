@@ -1,9 +1,10 @@
-version: "3.3"
+version: "3.9"
 
 services:
   imalive-api:
     restart: always
     image: imalive-api:latest
+    container_name: imalive-api
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -12,8 +13,34 @@ services:
       - .env
     ports:
       - "8080:8080"
+    networks:
+      - imalive-net
+  otel-collector:
+    restart: always
+    image: otel/opentelemetry-collector:latest
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - .docker/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"
+    depends_on:
+      - jaeger
+    networks:
+      - imalive-net
+  jaeger:
+    restart: always
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+    networks:
+      - imalive-net
   imalive-tests:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: unit_tests
+
+networks:
+  imalive-net:
