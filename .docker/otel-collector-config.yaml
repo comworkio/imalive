@@ -5,7 +5,7 @@ receivers:
       http:
 
 exporters:
-  jaeger:
+  otlp:
     endpoint: "jaeger:14250"
     tls:
       insecure: true
@@ -14,4 +14,4 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [jaeger]
+      exporters: [otlp]

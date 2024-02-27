@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 
-from main import OTEL_TRACER
+from utils.otel import get_otel_tracer
 from utils.health import health
 
 router = APIRouter()
 
 @router.get("/")
 def get_root():
-    with OTEL_TRACER.start_as_current_span("imalive-root-route"):
+    with get_otel_tracer().start_as_current_span("imalive-root-route"):
         return health()
