@@ -13,7 +13,7 @@ WORKDIR /app
 
 COPY requirements.txt /app/requirements.txt
 
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev linux-headers && \
+RUN apk add --no-cache --virtual .build-deps gcc g++ musl-dev linux-headers && \
     pip install --upgrade pip && \
     pip install -r requirements.txt && \
     apk del .build-deps
