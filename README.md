@@ -162,6 +162,10 @@ You can change `anode` by your node name with the `IMALIVE_NODE_NAME` environmen
 
 You also can log only a json output by making the environment variable `LOG_FORMAT` equal "json".
 
+## OpenTelemetry
+
+You can also configure an OTEL Grpc endpoint using the `OTEL_COLLECTOR_ENDPOINT` environment variable.
+
 ## Development / contributions
 
 Go see this [documentation](./CONTRIBUTING.md)
