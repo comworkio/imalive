@@ -9,13 +9,10 @@ _numeric_value_pattern = r"-?\d+\.\d+"
 _current_gauge_values = {}
 
 def create_gauge(name, description):
-    _current_gauge_values[name] = {
-        'val': 0.0,
-        'desc': description
-    }
+    _current_gauge_values[name] = 0.0
 
     def observable_gauge_func(_):
-        yield Observation(_current_gauge_values[name]['val'])
+        yield Observation(_current_gauge_values[name])
 
     get_otel_meter().create_observable_gauge(
         name = name,
@@ -34,4 +31,4 @@ def set_gauge(gauge, value):
     if match:
         val = float(match.group())
         gauge.set(val)
-        _current_gauge_values[gauge._name]['val'] = val
+        _current_gauge_values[gauge._name] = val
