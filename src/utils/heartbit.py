@@ -7,7 +7,7 @@ from time import sleep
 
 from utils.common import is_enabled
 from utils.otel import get_otel_tracer
-from utils.gauge import create_gauge, set_gauge, _current_gauge_values
+from utils.gauge import create_gauge, set_gauge
 from utils.metrics import all_metrics, check_and_log_usage
 from utils.logger import log_msg
 
