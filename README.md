@@ -1,6 +1,6 @@
 # Im Alive
 
-👋 Welcome to Im Alive API!
+👋 Welcome to Im Alive metrics exporter!
 
 <p align="center">
     <img src="./img/logo.png"/>
@@ -12,11 +12,19 @@ Let your raspberry pi nodes (or any computer/virtual machines as well) sing like
     <img src="./img/celine.jpeg"/>
 </p>
 
-Just a dummy healthcheck api for your nodes (support x86 and armhf for raspberrypi). It's also supported by [comwork cloud](https://doc.cloud.comwork.io/docs/tutorials/imalive).
+Just a dummy healthcheck api and metric exporterfor your nodes (support x86 and armhf for raspberrypi). It's also supported by [comwork cloud](https://doc.cloud.comwork.io/docs/tutorials/imalive).
 
 It provide a http/restful endpoint that you can use as a healthcheck rule to your loadbalancer and also publish a heartbit in stdout (usefull if you collect it in a log/alerting management system such as elasticstack).
 
 ![kibana](./img/kibana.png)
+
+It's also providing a `/v1/prom` http metrics endpoint that can be scrap by Prometheus:
+
+![prometheus](./img/prometheus.png)
+
+And can also send the metrics and some traces through OTLP/Grpc. Here's example of traces with Jaegger.
+
+![jaegger](./img/jaegger.png)
 
 ## Table of content
 
@@ -177,14 +185,6 @@ You also can log only a json output by making the environment variable `LOG_FORM
 ## OpenTelemetry
 
 You can also configure an OTEL Grpc endpoint using the `OTEL_COLLECTOR_ENDPOINT` environment variable.
-
-Imalive is sending metrics and traces through GRPC OTLP, you'll be able to see your traces on Jaegger like this:
-
-![jaegger](./img/jaegger.png)
-
-And your metrics on Prometheus like this:
-
-![prometheus](./img/prometheus.png)
 
 Here's an example of Prometheus configuration for scrapping the opentelemetry collector metrics:
 
