@@ -16,8 +16,6 @@ Just a dummy healthcheck api for your nodes (support x86 and armhf for raspberry
 
 It provide a http/restful endpoint that you can use as a healthcheck rule to your loadbalancer and also publish a heartbit in stdout (usefull if you collect it in a log/alerting management system such as elasticstack).
 
-BTW we're also providing packages and images for elasticstack (Kibana, Elasticsearch, Filebeat) [here](https://gitlab.comwork.io/oss/elasticstack).
-
 ![kibana](./img/kibana.png)
 
 ## Table of content
@@ -165,6 +163,14 @@ You also can log only a json output by making the environment variable `LOG_FORM
 ## OpenTelemetry
 
 You can also configure an OTEL Grpc endpoint using the `OTEL_COLLECTOR_ENDPOINT` environment variable.
+
+Imalive is sending metrics and traces through GRPC OTLP, you'll be able to see your traces on Jaegger like this:
+
+![jaegger](./img/jaegger.png)
+
+And your metrics on Prometheus like this:
+
+![prometheus](./img/prometheus.png)
 
 ## Development / contributions
 
