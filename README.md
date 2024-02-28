@@ -119,7 +119,7 @@ $ curl localhost:8080/v1/metrics
 
 ### Metrics for prometheus
 
-If you want to use `imalive` as a metrics exporter, this is the way:
+If you want to use `imalive` as a Prometheus metrics exporter, this is the way:
 
 ```shell
 $ curl localhost:8080/v1/prom
@@ -142,6 +142,20 @@ disk_used 12.563823699951172
 # TYPE disk_total gauge
 disk_total 56.096561431884766
 # HELP imalive_imalive_http_reques
+```
+
+Here's an example of Prometheus config for scraping the data:
+
+```yaml
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'imalive'
+    static_configs:
+      - targets: ['imalive-api:8080']
+    metrics_path: '/v1/prom'
+    scheme: http
 ```
 
 ## Heartbit
@@ -171,6 +185,48 @@ Imalive is sending metrics and traces through GRPC OTLP, you'll be able to see y
 And your metrics on Prometheus like this:
 
 ![prometheus](./img/prometheus.png)
+
+Here's an example of Prometheus configuration for scrapping the opentelemetry collector metrics:
+
+```yaml
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'opentelemetry'
+    static_configs:
+      - targets: ['otel-collector:8889']
+```
+
+And the opentelemetry collector configuration as well for receiving the traces and metrics from imalive:
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  debug:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    const_labels:
+      otel: otel
+  otlp:
+    endpoint: "jaeger:4317"
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
+    traces:
+      receivers: [otlp]
+      exporters: [otlp]
+```
 
 ## Development / contributions
 
