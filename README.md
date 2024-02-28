@@ -22,7 +22,7 @@ It's also providing a `/v1/prom` http metrics endpoint that can be scrap by Prom
 
 ![prometheus](./img/prometheus.png)
 
-And can also send the metrics and some traces through OTLP/Grpc. Here's example of traces with Jaegger.
+And can also send the metrics and some traces through OTLP/Grpc. Here's example of traces with Jaegger:
 
 ![jaegger](./img/jaegger.png)
 
