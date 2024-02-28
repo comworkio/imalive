@@ -42,6 +42,16 @@ services:
       - "16686:16686"
     networks:
       - imalive-net
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+     - 9090:9090
+    volumes:
+     - .docker/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+     - imalive-net
+    restart: always
   imalive-tests:
     build:
       context: .

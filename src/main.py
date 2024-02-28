@@ -7,7 +7,7 @@ from restful_ressources import import_ressources
 from utils.common import is_not_empty
 from utils.manifests import get_manifest_as_dict
 from utils.heartbit import heartbit
-from utils.otel import init_otel_tracer
+from utils.otel import init_otel_tracer, init_otel_metrics
 
 version = "unkown"
 manifest = get_manifest_as_dict()
@@ -25,6 +25,7 @@ app = FastAPI(
 instrumentator = Instrumentator()
 
 init_otel_tracer()
+init_otel_metrics()
 
 heartbit()
 

@@ -3,10 +3,11 @@ import asyncio
 import threading
 
 from time import sleep
+from opentelemetry.metrics import Observation
 
 from utils.common import is_enabled
-from utils.otel import get_otel_tracer
-from utils.prom import create_gauge, set_gauge
+from utils.otel import get_otel_tracer, get_otel_meter
+from utils.prom import create_gauge, set_gauge, _current_gauge_values
 from utils.metrics import all_metrics, check_and_log_usage
 from utils.logger import log_msg
 
@@ -28,6 +29,16 @@ swap_free_gauge = create_gauge("swap_free", "free swap")
 swap_used_gauge = create_gauge("swap_used", "used swap")
 swap_total_gauge = create_gauge("swap_total", "total swap")
 swap_percent_gauge = create_gauge("swap_percent", "percent swap")
+
+for name, value in _current_gauge_values.items():
+    def observable_gauge_func(_):
+        yield Observation(value['val'])
+
+    get_otel_meter().create_observable_gauge(
+        name = name,
+        description = value['desc'],
+        callbacks=[observable_gauge_func]
+    )
 
 def cpu(metrics):
     cpu_usage_percent = metrics['cpu']['percent']['all']
