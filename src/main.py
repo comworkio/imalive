@@ -24,13 +24,13 @@ app = FastAPI(
 
 instrumentator = Instrumentator()
 
+init_otel_tracer()
+
 heartbit()
 
 instrumentator.instrument(app, metric_namespace='imalive', metric_subsystem='imalive')
 instrumentator.expose(app, endpoint='/v1/prom')
 instrumentator.expose(app, endpoint='/prom')
-
-init_otel_tracer()
 
 FastAPIInstrumentor.instrument_app(app)
 
