@@ -16,8 +16,6 @@ Just a dummy healthcheck api for your nodes (support x86 and armhf for raspberry
 
 It provide a http/restful endpoint that you can use as a healthcheck rule to your loadbalancer and also publish a heartbit in stdout (usefull if you collect it in a log/alerting management system such as elasticstack).
 
-BTW we're also providing packages and images for elasticstack (Kibana, Elasticsearch, Filebeat) [here](https://gitlab.comwork.io/oss/elasticstack).
-
 ![kibana](./img/kibana.png)
 
 ## Table of content
@@ -121,7 +119,7 @@ $ curl localhost:8080/v1/metrics
 
 ### Metrics for prometheus
 
-If you want to use `imalive` as a metrics exporter, this is the way:
+If you want to use `imalive` as a Prometheus metrics exporter, this is the way:
 
 ```shell
 $ curl localhost:8080/v1/prom
@@ -146,6 +144,20 @@ disk_total 56.096561431884766
 # HELP imalive_imalive_http_reques
 ```
 
+Here's an example of Prometheus config for scraping the data:
+
+```yaml
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'imalive'
+    static_configs:
+      - targets: ['imalive-api:8080']
+    metrics_path: '/v1/prom'
+    scheme: http
+```
+
 ## Heartbit
 
 You can change the wait time between two heartbit with the `WAIT_TIME` environment variable (in seconds).
@@ -161,6 +173,60 @@ Here's an example of stdout heartbit:
 You can change `anode` by your node name with the `IMALIVE_NODE_NAME` environment variable.
 
 You also can log only a json output by making the environment variable `LOG_FORMAT` equal "json".
+
+## OpenTelemetry
+
+You can also configure an OTEL Grpc endpoint using the `OTEL_COLLECTOR_ENDPOINT` environment variable.
+
+Imalive is sending metrics and traces through GRPC OTLP, you'll be able to see your traces on Jaegger like this:
+
+![jaegger](./img/jaegger.png)
+
+And your metrics on Prometheus like this:
+
+![prometheus](./img/prometheus.png)
+
+Here's an example of Prometheus configuration for scrapping the opentelemetry collector metrics:
+
+```yaml
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'opentelemetry'
+    static_configs:
+      - targets: ['otel-collector:8889']
+```
+
+And the opentelemetry collector configuration as well for receiving the traces and metrics from imalive:
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  debug:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    const_labels:
+      otel: otel
+  otlp:
+    endpoint: "jaeger:4317"
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
+    traces:
+      receivers: [otlp]
+      exporters: [otlp]
+```
 
 ## Development / contributions
 

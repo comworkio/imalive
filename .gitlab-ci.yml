@@ -1,8 +1,8 @@
 stages:
   - publish
   - deliver
-  - deploy
   - test
+  - arm
 
 mirror:
   stage: publish
@@ -31,7 +31,7 @@ api_x86:
     - imalive
 
 api_arm:
-  stage: deliver
+  stage: arm
   script:
     - setsid ./ci/docker-deliver.sh "arm" "imalive-api"
   only:

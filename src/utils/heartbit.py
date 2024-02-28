@@ -3,9 +3,11 @@ import asyncio
 import threading
 
 from time import sleep
-from utils.common import is_enabled
 
-from utils.prom import create_gauge, set_gauge
+
+from utils.common import is_enabled
+from utils.otel import get_otel_tracer
+from utils.gauge import create_gauge, set_gauge
 from utils.metrics import all_metrics, check_and_log_usage
 from utils.logger import log_msg
 
@@ -59,16 +61,17 @@ def disc(metrics):
 def heartbit():
     def loop_heartbit():
         while True:
-            metrics = all_metrics()
+            with get_otel_tracer().start_as_current_span("imalive-heartbit"):
+                metrics = all_metrics()
 
-            cpu(metrics)
-            ram(metrics)
-            swap(metrics)
-            disc(metrics)
+                cpu(metrics)
+                ram(metrics)
+                swap(metrics)
+                disc(metrics)
 
-            log_msg("INFO", metrics if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json" else "[metrics] I'm alive! metrics = {}".format(metrics))
+                log_msg("INFO", metrics if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json" else "[metrics] I'm alive! metrics = {}".format(metrics))
 
-            sleep(WAIT_TIME)
+                sleep(WAIT_TIME)
 
     def start_heartbit():
         loop = asyncio.new_event_loop()
