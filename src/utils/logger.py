@@ -104,7 +104,7 @@ def quiet_log_msg (log_level, message):
             message['cid'] = cid
             formatted_log = json.dumps(message)
         else:
-            formatted_log = json.dumps({"body": message, "level": log_level, "time": vdate, "node": NODE_NAME})
+            formatted_log = json.dumps({"body": message, "level": log_level, "time": vdate, "node": NODE_NAME, "cid": cid})
 
     if is_debug(log_level):
         logging.debug(formatted_log)
