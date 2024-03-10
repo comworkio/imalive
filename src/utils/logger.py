@@ -4,9 +4,8 @@ import logging
 import json
 import sys
 
-from uuid import uuid4
-from asgi_correlation_id import correlation_id
 from datetime import datetime
+from utils.cid import get_current_cid
 
 from utils.common import is_disabled, is_enabled, is_true
 
@@ -95,11 +94,7 @@ else:
 
 def quiet_log_msg (log_level, message):
     vdate = datetime.now().isoformat()
-    try:
-        cid = correlation_id.get()
-    except Exception:
-        cid = uuid4()
-
+    cid = get_current_cid()
     formatted_log = "[{}][{}][{}][{}] {}".format(log_level, vdate, NODE_NAME, cid, message)
     if is_enabled(LOG_FORMAT) and LOG_FORMAT == "json":
         if isinstance(message, dict):
