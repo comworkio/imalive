@@ -4,7 +4,6 @@ import threading
 
 from time import sleep
 
-
 from utils.common import is_enabled
 from utils.otel import get_otel_tracer
 from utils.gauge import create_gauge, set_gauge

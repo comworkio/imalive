@@ -13,6 +13,7 @@ docker-compose -f docker-compose-local.yml up --build --abort-on-container-exit 
 ```
 
 Then you can try:
+* the api endpoint: http://localhost:8080
 * jaegger UI here for the traces: http://localhost:16686
 * the opentelemetry metrics exporter endpoint: http://localhost:8889/metrics
 * prometheus: http://localhost:9090
