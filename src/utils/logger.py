@@ -97,7 +97,7 @@ def quiet_log_msg (log_level, message):
     vdate = datetime.now().isoformat()
     try:
         cid = correlation_id.get()
-    except:
+    except Exception:
         cid = uuid4()
 
     formatted_log = "[{}][{}][{}][{}] {}".format(log_level, vdate, NODE_NAME, cid, message)
