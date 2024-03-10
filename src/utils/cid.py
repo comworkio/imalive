@@ -7,7 +7,7 @@ def get_current_cid():
     try:
         cid = correlation_id.get()
         if is_empty(cid):
-            cid = uuid4()
+            cid = "{}".format(uuid4())
         return cid
     except Exception:
-        return uuid4()
+        return "{}".format(uuid4())

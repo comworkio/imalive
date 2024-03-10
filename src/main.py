@@ -10,6 +10,7 @@ from restful_ressources import import_ressources
 from exception.ImaliveHTTPException import ImaliveHTTPException
 
 from utils.common import is_not_empty
+from utils.cid import get_current_cid
 from utils.manifests import get_manifest_as_dict
 from utils.heartbit import heartbit
 from utils.otel import init_otel_tracer, init_otel_metrics
@@ -48,7 +49,7 @@ FastAPIInstrumentor.instrument_app(app)
 
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
-    headers = {'x-imalive-cid': correlation_id.get() or "{}".format(uuid4())}
+    headers = {'x-imalive-cid': get_current_cid()}
 
     if isinstance(exc, ImaliveHTTPException):
         return JSONResponse(content = exc.message, status_code = exc.status_code, headers = headers)
