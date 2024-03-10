@@ -2,6 +2,7 @@ fastapi[all]
 requests
 uvicorn[standard]
 fastapi-utils
+asgi-correlation-id
 psutil
 prometheus-fastapi-instrumentator
 opentelemetry-api
