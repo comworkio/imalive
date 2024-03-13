@@ -27,6 +27,7 @@ api_x86:
       - ci/docker-deliver.sh
       - docker-compose-build-x86.yml
       - Dockerfile
+      - VERSION
   tags:
     - imalive
 
@@ -43,6 +44,7 @@ api_arm:
       - ci/docker-deliver.sh
       - docker-compose-build-arm.yml
       - Dockerfile.arm
+      - VERSION
   tags:
     - buildarm
 
@@ -59,5 +61,6 @@ unit_test:
       - api/*
       - ci/test.sh
       - Dockerfile
+      - VERSION
   tags:
     - training_unittest
