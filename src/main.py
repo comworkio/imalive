@@ -2,7 +2,7 @@ from uuid import uuid4
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.exception_handlers import http_exception_handler
-from asgi_correlation_id import CorrelationIdMiddleware, correlation_id
+from asgi_correlation_id import CorrelationIdMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
@@ -13,7 +13,7 @@ from utils.common import is_not_empty
 from utils.cid import get_current_cid
 from utils.manifests import get_manifest_as_dict
 from utils.heartbit import heartbit
-from utils.otel import init_otel_tracer, init_otel_metrics
+from utils.otel import init_otel_tracer, init_otel_metrics, init_otel_logger
 
 version = "unkown"
 manifest = get_manifest_as_dict()
@@ -38,6 +38,7 @@ instrumentator = Instrumentator()
 
 init_otel_tracer()
 init_otel_metrics()
+init_otel_logger()
 
 heartbit()
 
