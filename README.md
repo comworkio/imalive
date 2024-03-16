@@ -208,7 +208,7 @@ receivers:
       http:
 
 exporters:
-  debug:
+  logging:
   prometheus:
     endpoint: "0.0.0.0:8889"
     const_labels:
@@ -218,6 +218,9 @@ exporters:
     tls:
       insecure: true
 
+processors:
+  batch:
+
 service:
   pipelines:
     metrics:
@@ -226,6 +229,10 @@ service:
     traces:
       receivers: [otlp]
       exporters: [otlp]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging]
 ```
 
 ## Development / contributions
