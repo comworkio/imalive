@@ -29,4 +29,10 @@ spec:
               value: {{ $.Values.log.level | quote }}
             - name: LOG_FORMAT
               value: {{ $.Values.log.format | quote }}
+
+            {{ if $.Values.otlp_endpoint }}
+            - name: OTEL_COLLECTOR_ENDPOINT
+              value: {{ $.Values.otlp_endpoint | quote }}
+            {{ end }}
+
       restartPolicy: {{ $.Values.restartPolicy }}
