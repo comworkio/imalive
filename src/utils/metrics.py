@@ -32,6 +32,11 @@ def virtual_memory():
         "used": used,
         "available": available,
         "percent": percent_used,
+        "numeric": {
+            "total": mem.total,
+            "available": mem.available,
+            "used": mem.used
+        }
     }
 
 def swap_memory():
@@ -40,7 +45,12 @@ def swap_memory():
         "total": bytes2human(sw.total),
         "used": bytes2human(sw.used),
         "free": bytes2human(sw.free),
-        "percent": sw.percent
+        "percent": sw.percent,
+        "numeric": {
+            "total": sw.total,
+            "used": sw.used,
+            "free": sw.free
+        }
     }
 
 def cpu():
