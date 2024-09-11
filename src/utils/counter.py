@@ -1,9 +1,11 @@
 from prometheus_client import Counter
 
 from utils.cid import get_current_cid
+from utils.common import sanitize_metric_name
 from utils.otel import get_otel_meter
 
 def create_counter(name, description):
+    name = sanitize_metric_name(name)
     return {
         'otel': get_otel_meter().create_counter(
                     name = name,

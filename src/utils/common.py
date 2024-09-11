@@ -89,3 +89,7 @@ def is_uuid (var):
 
 def is_not_uuid (var):
     return not is_uuid(var)
+
+_allowed_chars_pattern = re.compile(r'[^a-zA-Z0-9_\-\.]')
+def sanitize_metric_name(name: str):
+    return re.sub(_allowed_chars_pattern, '_', name)
