@@ -24,7 +24,7 @@ docker_compose_file="docker-compose.yml"
 
 echo "${DOCKER_ACCESS_TOKEN}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
-COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f "${docker_compose_file}" build "${IMAGE}"
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker compose -f "${docker_compose_file}" build "${IMAGE}"
 
 [[ $ARCH == "x86" ]] && tag_and_push "latest" "${IMAGE}"
 [[ $ARCH == "x86" ]] && tag_and_push "${VERSION}" "${IMAGE}"

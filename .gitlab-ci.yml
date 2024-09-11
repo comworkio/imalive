@@ -25,7 +25,7 @@ api_x86:
       - .gitlab-ci.yml
       - imalive.yml
       - api/*
-      - ci/docker-deliver.sh
+      - ci/*
       - docker-compose-build-x86.yml
       - Dockerfile
       - VERSION
