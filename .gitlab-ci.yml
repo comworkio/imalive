@@ -24,7 +24,7 @@ api_x86:
     changes: &build_trigger
       - .gitlab-ci.yml
       - imalive.yml
-      - api/*
+      - src/**/*
       - ci/*
       - docker-compose-build-x86.yml
       - Dockerfile
