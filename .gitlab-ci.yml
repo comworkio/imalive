@@ -21,8 +21,9 @@ api_x86:
   only:
     refs:
       - /^(main.*)$/
-    changes:
+    changes: &build_trigger
       - .gitlab-ci.yml
+      - imalive.yml
       - api/*
       - ci/docker-deliver.sh
       - docker-compose-build-x86.yml
@@ -30,23 +31,6 @@ api_x86:
       - VERSION
   tags:
     - imalive
-
-api_arm:
-  stage: arm
-  script:
-    - setsid ./ci/docker-deliver.sh "arm" "imalive-api"
-  only:
-    refs:
-      - /^(main.*)$/
-    changes:
-      - .gitlab-ci.yml
-      - api/*
-      - ci/docker-deliver.sh
-      - docker-compose-build-arm.yml
-      - Dockerfile.arm
-      - VERSION
-  tags:
-    - buildarm
 
 unit_test:
   stage: test
@@ -56,11 +40,6 @@ unit_test:
     refs:
       - /^(main.*)$/
       - merge_requests
-    changes:
-      - .gitlab-ci.yml
-      - api/*
-      - ci/test.sh
-      - Dockerfile
-      - VERSION
+    changes: *build_trigger
   tags:
     - training_unittest
