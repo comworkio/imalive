@@ -29,6 +29,13 @@ def is_empty_key(vdict, key):
 def is_not_empty_key(vdict, key):
     return not is_empty_key(vdict, key)
 
+def remove_key_safely(vdict, key):
+    if is_not_empty_key(vdict, key):
+        del vdict[key]
+
+def get_or_else(vdict, key, default):
+    return default if is_empty_key(vdict, key) else vdict[key]
+
 def is_numeric (var):
     if (isinstance(var, int)):
         return True

@@ -63,6 +63,7 @@ def all_metrics():
     vdate = datetime.now()
     return {
         "status": "ok",
+        "type": "heartbit",
         'name': os.environ['IMALIVE_NODE_NAME'],
         'time': vdate.isoformat(),
         "disk_usage": disk_usage(),

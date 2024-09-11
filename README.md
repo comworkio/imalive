@@ -235,6 +235,26 @@ service:
       exporters: [logging]
 ```
 
+## Monitor features
+
+Imalive is also able to check some http endpoint and log and export metrics (status and duration).
+
+In order to use that, just override the `/app/imalive.yml` with the following content:
+
+```yaml
+---
+monitors:
+  - type: http
+    name: imalive
+    url: http://localhost:8081
+    method: GET # optional (GET by default, only POST and GET are supported)
+    expected_http_code: 200 # optional (200 by default)
+    expected_contain: "\"status\":\"ok\"" # optional (no check on the body response if not present)
+    timeout: 30 # optional (30 seconds if not present)
+    username: changeit # optional (no basic auth if not present)
+    password: changerit # optional (no basic auth if not present)
+```
+
 ## Development / contributions
 
 Go see this [documentation](./CONTRIBUTING.md)

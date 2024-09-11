@@ -13,6 +13,7 @@ from utils.common import is_not_empty
 from utils.cid import get_current_cid
 from utils.manifests import get_manifest_as_dict
 from utils.heartbit import heartbit
+from utils.monitor import monitors
 from utils.otel import init_otel_tracer, init_otel_metrics, init_otel_logger
 
 version = "unkown"
@@ -41,6 +42,7 @@ init_otel_metrics()
 init_otel_logger()
 
 heartbit()
+monitors()
 
 instrumentator.instrument(app, metric_namespace='imalive', metric_subsystem='imalive')
 instrumentator.expose(app, endpoint='/v1/prom')
