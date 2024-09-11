@@ -19,6 +19,7 @@ ERROR_THRESHOLD = int(os.getenv('ERROR_THRESHOLD', 90))
 cpu_gauge = create_gauge("cpu_all", "cpu usage in percent")
 ram_total_gauge = create_gauge("ram_total", "total of ram")
 ram_available_gauge = create_gauge("ram_available", "available ram")
+ram_used_gauge = create_gauge("ram_used", "used ram")
 ram_percent_gauge = create_gauge("ram_percent", "percent ram")
 disk_free_gauge = create_gauge("disk_free", "free storage's space")
 disk_used_gauge = create_gauge("disk_used", "used storage's space")
@@ -36,16 +37,17 @@ def cpu(metrics):
 
 def ram(metrics):
     memory_usage_percent = metrics['virtual_memory']['percent']
-    set_gauge(ram_total_gauge, metrics['virtual_memory']['total'])
-    set_gauge(ram_available_gauge, metrics['virtual_memory']['available'])
+    set_gauge(ram_total_gauge, metrics['virtual_memory']['numeric']['total'])
+    set_gauge(ram_available_gauge, metrics['virtual_memory']['numeric']['available'])
+    set_gauge(ram_used_gauge, metrics['virtual_memory']['numeric']['used'])
     set_gauge(ram_percent_gauge, memory_usage_percent)
     check_and_log_usage('Memory', memory_usage_percent, WARNING_THRESHOLD, ERROR_THRESHOLD)
 
 def swap(metrics):
     swap_usage_percent = metrics['swap_memory']['percent']
-    set_gauge(swap_free_gauge, metrics['swap_memory']['free'])
-    set_gauge(swap_used_gauge, metrics['swap_memory']['used'])
-    set_gauge(swap_total_gauge, metrics['swap_memory']['total'])
+    set_gauge(swap_free_gauge, metrics['swap_memory']['numeric']['free'])
+    set_gauge(swap_used_gauge, metrics['swap_memory']['numeric']['used'])
+    set_gauge(swap_total_gauge, metrics['swap_memory']['numeric']['total'])
     set_gauge(swap_percent_gauge, swap_usage_percent)
     check_and_log_usage('Swap', swap_usage_percent, WARNING_THRESHOLD, ERROR_THRESHOLD)
 
