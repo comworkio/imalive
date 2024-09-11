@@ -69,7 +69,7 @@ def check_http_monitor(monitor, gauges):
                 "status": "ko",
                 "type": "monitor",
                 "time": vdate.isoformat(),
-                "message": "Not supported http method",
+                "message": "Not supported http method: actual = {}".format(method),
                 "monitor": monitor
             })
             set_gauge(gauges['result'], 0)
@@ -81,7 +81,7 @@ def check_http_monitor(monitor, gauges):
                 "type": "monitor",
                 "time": vdate.isoformat(),
                 "duration": duration,
-                "message": "Not supported http method",
+                "message": "Not expected status code: expected = {}, actual = {}".format(expected_http_code, response.status_code),
                 "monitor": monitor
             })
             set_gauge(gauges['result'], 0)
@@ -93,7 +93,7 @@ def check_http_monitor(monitor, gauges):
                 "type": "monitor",
                 "time": vdate.isoformat(),
                 "duration": duration,
-                "message": "Response not contain {}".format(expected_contain),
+                "message": "Response not valid: expected = {}, actual = {}".format(expected_contain, response.text),
                 "monitor": monitor
             })
             set_gauge(gauges['result'], 0)
