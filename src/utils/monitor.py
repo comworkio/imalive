@@ -48,12 +48,14 @@ def check_http_monitor(monitor, gauges):
     expected_contain = get_or_else(monitor, 'expected_contain', None)
     username = get_or_else(monitor, 'username', None)
     password = get_or_else(monitor, 'password', None)
-    remove_key_safely(monitor, 'password') 
 
     auth = None
     duration = None
     if is_not_empty(username) and is_not_empty(password):
         auth = HTTPBasicAuth(username, password)
+
+    remove_key_safely(monitor, 'username')
+    remove_key_safely(monitor, 'password')
 
     try:
         if method == "GET":
