@@ -1,4 +1,6 @@
 ---
-imalive_api_version: 1.7
+imalive_api_version: 4.0.1
 imalive_port: 8099
 imalive_wait_time: 300
+imalive_force_recreate: true
+imalive_monitors: []

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+FORCE_RECREATE_OPT=""
+FORCE_RECREATE_FLAG="{{ imalive_force_recreate }}"
+
+if [[ $FORCE_RECREATE_FLAG = "True" ]]; then
+  FORCE_RECREATE_OPT="--force-recreate"
+  docker ps -a|awk '($2 ~ "comworkio/imalive"){system("docker rm -f "$1)}' || :
+fi
+
+{% if centos_version is defined and (centos_version == "9" or centos_version == 9) %}
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker compose -f {{ node_home }}/docker-compose-imalive.yml up -d $FORCE_RECREATE_OPT
+{% else %}
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f {{ node_home }}/docker-compose-imalive.yml up -d $FORCE_RECREATE_OPT
+{% endif %}

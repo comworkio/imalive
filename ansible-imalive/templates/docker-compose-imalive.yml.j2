@@ -5,8 +5,9 @@ services:
     image: comworkio/imalive-api:{{ imalive_api_version }}-x86
     container_name: imalive-api
     restart: always
-    environment: 
-      - WAIT_TIME={{ imalive_wait_time }}
-      - IMALIVE_NODE_NAME={{ node_name }}
+    env_file:
+      - .env.imalive
+    volumes:
+      - {{ node_home }}/imalive.yml:/app/imalive.yml:ro
     ports: 
       - {{ imalive_port }}:8080
