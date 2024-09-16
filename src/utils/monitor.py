@@ -51,8 +51,10 @@ def check_http_monitor(monitor, gauges):
 
     if is_not_empty_key(monitor, 'username') and is_not_empty_key(monitor, 'password'): 
         auth = HTTPBasicAuth(monitor['username'], monitor['password'])
-        del_key_if_exists(monitor, 'username')
-        del_key_if_exists(monitor, 'password')
+
+    pmonitor = monitor.copy()
+    del_key_if_exists(pmonitor, 'username')
+    del_key_if_exists(pmonitor, 'password')
 
     try:
         if method == "GET":
@@ -69,7 +71,7 @@ def check_http_monitor(monitor, gauges):
                 "type": "monitor",
                 "time": vdate.isoformat(),
                 "message": "Not supported http method: actual = {}".format(method),
-                "monitor": monitor
+                "monitor": pmonitor
             })
             set_gauge(gauges['result'], 0)
             return
@@ -81,7 +83,7 @@ def check_http_monitor(monitor, gauges):
                 "time": vdate.isoformat(),
                 "duration": duration,
                 "message": "Not expected status code: expected = {}, actual = {}".format(expected_http_code, response.status_code),
-                "monitor": monitor
+                "monitor": pmonitor
             })
             set_gauge(gauges['result'], 0)
             return
@@ -93,7 +95,7 @@ def check_http_monitor(monitor, gauges):
                 "time": vdate.isoformat(),
                 "duration": duration,
                 "message": "Response not valid: expected = {}, actual = {}".format(expected_contain, response.text),
-                "monitor": monitor
+                "monitor": pmonitor
             })
             set_gauge(gauges['result'], 0)
             return
@@ -105,7 +107,7 @@ def check_http_monitor(monitor, gauges):
             "time": vdate.isoformat(),
             "duration": duration,
             "message": "Monitor is healthy",
-            "monitor": monitor
+            "monitor": pmonitor
         })
 
     except Exception as e:
@@ -116,7 +118,7 @@ def check_http_monitor(monitor, gauges):
             "time": vdate.isoformat(),
             "message": "Unexpected error",
             "error": "{}".format(e),
-            "monitor": monitor
+            "monitor": pmonitor
         })
 
 gauges = {}
