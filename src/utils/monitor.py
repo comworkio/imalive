@@ -11,7 +11,7 @@ from datetime import datetime
 from time import sleep
 from requests.auth import HTTPBasicAuth
 
-from utils.common import is_empty_key, get_or_else, is_not_empty, is_not_empty_key, remove_key_safely
+from utils.common import is_empty_key, get_or_else, is_not_empty, is_not_empty_key, del_key_if_exists
 from utils.gauge import create_gauge, set_gauge
 from utils.heartbit import WAIT_TIME
 from utils.logger import log_msg
@@ -51,8 +51,8 @@ def check_http_monitor(monitor, gauges):
 
     if is_not_empty_key(monitor, 'username') and is_not_empty_key(monitor, 'password'): 
         auth = HTTPBasicAuth(monitor['username'], monitor['password'])
-        remove_key_safely(monitor, 'username')
-        remove_key_safely(monitor, 'password')
+        del_key_if_exists(monitor, 'username')
+        del_key_if_exists(monitor, 'password')
 
     try:
         if method == "GET":

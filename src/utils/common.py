@@ -2,11 +2,11 @@ import base64
 import re
 
 def is_not_empty (var):
-    if (isinstance(var, bool)):
+    if isinstance(var, bool):
         return var
-    elif (isinstance(var, int)):
+    elif isinstance(var, int):
         return not var == 0
-    elif (isinstance(var, list)):
+    elif isinstance(var, list) or isinstance(var, dict):
         return len(var) > 0
     empty_chars = ["", "null", "nil", "false", "none"]
     return var is not None and not any(c == "{}".format(var).lower() for c in empty_chars)
@@ -29,7 +29,7 @@ def is_empty_key(vdict, key):
 def is_not_empty_key(vdict, key):
     return not is_empty_key(vdict, key)
 
-def remove_key_safely(vdict, key):
+def del_key_if_exists(vdict, key):
     if is_not_empty_key(vdict, key):
         del vdict[key]
 
