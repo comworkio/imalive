@@ -6,7 +6,7 @@ from opentelemetry.metrics import Observation
 from utils.common import sanitize_metric_name
 from utils.otel import get_otel_meter
 
-_numeric_value_pattern = r"-?\d+\.\d+"
+_numeric_value_pattern = r"-?\d+\.?\d*"
 _current_gauge_values = {}
 
 def create_gauge(name, description):

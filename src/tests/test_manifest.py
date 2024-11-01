@@ -1,3 +1,5 @@
+import re
+
 from unittest import TestCase
 from utils.manifests import get_manifest_as_dict
 
