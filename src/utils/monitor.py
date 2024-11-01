@@ -33,7 +33,7 @@ def check_http_monitor(monitor, gauges):
             "message": "Not an http monitor",
             "monitor": monitor 
         })
-        set_gauge(gauges['result'], 0, labels)
+        set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
         return
 
     if is_empty_key(monitor, 'url'):
@@ -44,7 +44,7 @@ def check_http_monitor(monitor, gauges):
             "message": "Missing mandatory url",
             "monitor": monitor 
         })
-        set_gauge(gauges['result'], 0, labels)
+        set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
         return
 
     method = get_or_else(monitor, 'method', 'GET')
@@ -65,11 +65,11 @@ def check_http_monitor(monitor, gauges):
         if method == "GET":
             response = requests.get(monitor['url'], auth=auth, timeout=timeout)
             duration = response.elapsed.total_seconds()
-            set_gauge(gauges['duration'], duration, labels)
+            set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         elif method == "POST":
             response = requests.post(monitor['url'], auth=auth, timeout=timeout)
             duration = response.elapsed.total_seconds()
-            set_gauge(gauges['duration'], duration, labels)
+            set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         else:
             log_msg("ERROR", { 
                 "status": "ko",
@@ -78,7 +78,7 @@ def check_http_monitor(monitor, gauges):
                 "message": "Not supported http method: actual = {}".format(method),
                 "monitor": pmonitor
             })
-            set_gauge(gauges['result'], 0, labels)
+            set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
             return
 
         if response.status_code != expected_http_code:
@@ -90,7 +90,7 @@ def check_http_monitor(monitor, gauges):
                 "message": "Not expected status code: expected = {}, actual = {}".format(expected_http_code, response.status_code),
                 "monitor": pmonitor
             })
-            set_gauge(gauges['result'], 0, labels)
+            set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
             return
 
         if is_not_empty(expected_contain) and expected_contain not in response.text:
@@ -102,10 +102,10 @@ def check_http_monitor(monitor, gauges):
                 "message": "Response not valid: expected = {}, actual = {}".format(expected_contain, response.text),
                 "monitor": pmonitor
             })
-            set_gauge(gauges['result'], 0, labels)
+            set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
             return
 
-        set_gauge(gauges['result'], 1, labels)
+        set_gauge(gauges['result'], 1, {**labels, 'kind': 'result'})
         log_msg("INFO", { 
             "status": "ok",
             "type": "monitor",
@@ -116,7 +116,7 @@ def check_http_monitor(monitor, gauges):
         })
 
     except Exception as e:
-        set_gauge(gauges['result'], 0, labels)
+        set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
         log_msg("ERROR", {
             "status": "ko",
             "type": "monitor",
@@ -129,7 +129,7 @@ def check_http_monitor(monitor, gauges):
 
 gauges = {}
 def monitors():
-    labels = ['name', 'family']
+    labels = ['name', 'family', 'kind']
     def loop_monitors():
         config_path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', 'imalive.yml'))
         with open(config_path, "r") as stream:
