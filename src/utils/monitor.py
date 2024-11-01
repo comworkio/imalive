@@ -20,6 +20,11 @@ from utils.otel import get_otel_tracer
 def check_http_monitor(monitor, gauges):
     vdate = datetime.now()
 
+    labels = {
+        'name': monitor['name'],
+        'family': monitor['family'] if is_not_empty_key(monitor, 'family') else monitor['name']
+    }
+
     if monitor['type'] != 'http':
         log_msg("DEBUG", { 
             "status": "ok",
@@ -28,7 +33,7 @@ def check_http_monitor(monitor, gauges):
             "message": "Not an http monitor",
             "monitor": monitor 
         })
-        set_gauge(gauges['result'], 0)
+        set_gauge(gauges['result'], 0, labels)
         return
 
     if is_empty_key(monitor, 'url'):
@@ -39,7 +44,7 @@ def check_http_monitor(monitor, gauges):
             "message": "Missing mandatory url",
             "monitor": monitor 
         })
-        set_gauge(gauges['result'], 0)
+        set_gauge(gauges['result'], 0, labels)
         return
 
     method = get_or_else(monitor, 'method', 'GET')
@@ -60,11 +65,11 @@ def check_http_monitor(monitor, gauges):
         if method == "GET":
             response = requests.get(monitor['url'], auth=auth, timeout=timeout)
             duration = response.elapsed.total_seconds()
-            set_gauge(gauges['duration'], duration)
+            set_gauge(gauges['duration'], duration, labels)
         elif method == "POST":
             response = requests.post(monitor['url'], auth=auth, timeout=timeout)
             duration = response.elapsed.total_seconds()
-            set_gauge(gauges['duration'], duration)
+            set_gauge(gauges['duration'], duration, labels)
         else:
             log_msg("ERROR", { 
                 "status": "ko",
@@ -73,7 +78,7 @@ def check_http_monitor(monitor, gauges):
                 "message": "Not supported http method: actual = {}".format(method),
                 "monitor": pmonitor
             })
-            set_gauge(gauges['result'], 0)
+            set_gauge(gauges['result'], 0, labels)
             return
 
         if response.status_code != expected_http_code:
@@ -85,7 +90,7 @@ def check_http_monitor(monitor, gauges):
                 "message": "Not expected status code: expected = {}, actual = {}".format(expected_http_code, response.status_code),
                 "monitor": pmonitor
             })
-            set_gauge(gauges['result'], 0)
+            set_gauge(gauges['result'], 0, labels)
             return
 
         if is_not_empty(expected_contain) and expected_contain not in response.text:
@@ -97,10 +102,10 @@ def check_http_monitor(monitor, gauges):
                 "message": "Response not valid: expected = {}, actual = {}".format(expected_contain, response.text),
                 "monitor": pmonitor
             })
-            set_gauge(gauges['result'], 0)
+            set_gauge(gauges['result'], 0, labels)
             return
 
-        set_gauge(gauges['result'], 1)
+        set_gauge(gauges['result'], 1, labels)
         log_msg("INFO", { 
             "status": "ok",
             "type": "monitor",
@@ -111,18 +116,20 @@ def check_http_monitor(monitor, gauges):
         })
 
     except Exception as e:
-        set_gauge(gauges['result'], 0)
+        set_gauge(gauges['result'], 0, labels)
         log_msg("ERROR", {
             "status": "ko",
             "type": "monitor",
             "time": vdate.isoformat(),
             "message": "Unexpected error",
             "error": "{}".format(e),
+            "family"
             "monitor": pmonitor
         })
 
 gauges = {}
 def monitors():
+    labels = ['name', 'family']
     def loop_monitors():
         config_path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', 'imalive.yml'))
         with open(config_path, "r") as stream:
@@ -132,8 +139,8 @@ def monitors():
                     continue
 
                 gauges[monitor['name']] = {
-                    'result': create_gauge("monitor_{}_result".format(monitor['name']), "monitor {} result".format(monitor['name'])),
-                    'duration': create_gauge("monitor_{}_duration".format(monitor['name']), "monitor {} duration".format(monitor['name']))
+                    'result': create_gauge("monitor_{}_result".format(monitor['name']), "monitor {} result".format(monitor['name']), labels),
+                    'duration': create_gauge("monitor_{}_duration".format(monitor['name']), "monitor {} duration".format(monitor['name']), labels)
                 }
 
             while True:
