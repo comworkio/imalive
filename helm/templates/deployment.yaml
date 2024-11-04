@@ -41,6 +41,28 @@ spec:
               value: {{ $.Values.otlp_endpoint | quote }}
             {{ end }}
 
+            {{ if $.Values.otlp_username }}
+            - name: OTEL_COLLECTOR_USERNAME
+              value: {{ $.Values.otlp_username | quote }}
+            {{ end }}
+
+            {{ if $.Values.otlp_password }}
+            - name: OTEL_COLLECTOR_PASSWORD
+              value: {{ $.Values.otlp_password | quote }}
+            {{ end }}
+
+            {{ if $.Values.otlp_auth_header }}
+            - name: OTEL_COLLECTOR_AUTH_HEADER
+              value: {{ $.Values.otlp_auth_header | quote }}
+            {{ end }}
+
+          {{- if .Values.extraEnvFrom }}
+          envFrom:
+          {{- with .Values.extraEnvFrom }}
+            {{- toYaml . | nindent 6 }}
+          {{- end }}
+          {{- end }}
+
       restartPolicy: {{ $.Values.restartPolicy }}
 
       volumes:
