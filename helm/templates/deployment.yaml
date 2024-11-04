@@ -20,6 +20,12 @@ spec:
           name: {{ include "common.names.fullname" . }}
           ports:
             - containerPort: 8080
+
+          volumeMounts:
+            - name: imalive-config
+              mountPath: /app/imalive.yml
+              subPath: imalive.yml
+
           env:
             - name: IMALIVE_NODE_NAME
               value: {{ include "common.names.fullname" . }}
@@ -36,3 +42,8 @@ spec:
             {{ end }}
 
       restartPolicy: {{ $.Values.restartPolicy }}
+
+      volumes:
+        - name: imalive-config
+          configMap:
+            name: imalive-config

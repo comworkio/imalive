@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: imalive-config
+data:
+{{- if .Values.monitors }}
+  imalive.yml: |
+    ---
+    monitors:
+{{ toYaml .Values.monitors | indent 6 }}
+{{- else }}
+  imalive.yml: |
+    ---
+    monitors: []
+{{- end }}

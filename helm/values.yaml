@@ -14,3 +14,5 @@ log:
 ingress:
   enable: true
   ssl_redirect: "false"
+
+monitors: []
