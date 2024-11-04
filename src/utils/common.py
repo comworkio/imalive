@@ -93,3 +93,6 @@ def is_not_uuid (var):
 _allowed_chars_metric_pattern = re.compile(r'[^a-zA-Z0-9]')
 def sanitize_metric_name(name: str):
     return re.sub(_allowed_chars_metric_pattern, '_', name)
+
+def sanitize_header_name(name: str) -> str:
+    return '-'.join(word.capitalize() for word in name.split('-'))

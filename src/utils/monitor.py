@@ -11,7 +11,7 @@ from datetime import datetime
 from time import sleep
 from requests.auth import HTTPBasicAuth
 
-from utils.common import is_empty_key, get_or_else, is_not_empty, is_not_empty_key, del_key_if_exists
+from utils.common import is_empty_key, get_or_else, is_not_empty, is_not_empty_key, del_key_if_exists, sanitize_header_name
 from utils.gauge import create_gauge, set_gauge
 from utils.heartbit import WAIT_TIME
 from utils.logger import log_msg
@@ -53,9 +53,15 @@ def check_http_monitor(monitor, gauges):
     expected_contain = get_or_else(monitor, 'expected_contain', None)
     duration = None
     auth = None
+    headers = {}
 
     if is_not_empty_key(monitor, 'username') and is_not_empty_key(monitor, 'password'): 
         auth = HTTPBasicAuth(monitor['username'], monitor['password'])
+
+    if is_not_empty_key(monitor, 'headers'):
+        for header in monitor['headers']:
+            if is_not_empty_key(header, 'name') and is_not_empty_key(header, 'value'):
+                headers[sanitize_header_name(header['name'])] = header['value']
 
     pmonitor = monitor.copy()
     del_key_if_exists(pmonitor, 'username')
@@ -63,11 +69,11 @@ def check_http_monitor(monitor, gauges):
 
     try:
         if method == "GET":
-            response = requests.get(monitor['url'], auth=auth, timeout=timeout)
+            response = requests.get(monitor['url'], auth=auth, headers=headers, timeout=timeout)
             duration = response.elapsed.total_seconds()
             set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         elif method == "POST":
-            response = requests.post(monitor['url'], auth=auth, timeout=timeout)
+            response = requests.post(monitor['url'], auth=auth, headers=headers, timeout=timeout)
             duration = response.elapsed.total_seconds()
             set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         else:
