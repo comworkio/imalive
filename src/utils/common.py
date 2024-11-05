@@ -12,7 +12,7 @@ def is_not_empty (var):
     return var is not None and not any(c == "{}".format(var).lower() for c in empty_chars)
 
 def is_true (var):
-    if (isinstance(var, bool)):
+    if isinstance(var, bool):
         return var
     false_char = ["false", "ko", "no", "off"]
     return is_not_empty(var) and not any(c == "{}".format(var).lower() for c in false_char)
@@ -37,7 +37,7 @@ def get_or_else(vdict, key, default):
     return default if is_empty_key(vdict, key) else vdict[key]
 
 def is_numeric (var):
-    if (isinstance(var, int)):
+    if isinstance(var, int):
         return True
     return is_not_empty(var) and str(var).isnumeric()
 
