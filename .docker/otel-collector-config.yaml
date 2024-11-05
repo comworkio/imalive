@@ -2,15 +2,17 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
       http:
+        endpoint: 0.0.0.0:4318
 
 exporters:
-  logging:
+  debug:
   prometheus:
     endpoint: "0.0.0.0:8889"
     const_labels:
       otel: otel
-  otlp:
+  otlp/jaeger:
     endpoint: "jaeger:4317"
     tls:
       insecure: true
@@ -25,8 +27,8 @@ service:
       exporters: [prometheus]
     traces:
       receivers: [otlp]
-      exporters: [otlp]
+      exporters: [otlp/jaeger]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging]
+      exporters: [debug]

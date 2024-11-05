@@ -41,6 +41,11 @@ spec:
               value: {{ $.Values.otlp_endpoint | quote }}
             {{ end }}
 
+            {{ if $.Values.otlp_tls_check }}
+            - name: OTEL_COLLECTOR_TLS_CHECK
+              value: {{ $.Values.otlp_tls_check | quote }}
+            {{ end }}
+
             {{ if $.Values.otlp_username }}
             - name: OTEL_COLLECTOR_USERNAME
               value: {{ $.Values.otlp_username | quote }}

@@ -19,12 +19,13 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExport
 from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
 from opentelemetry.exporter.otlp.proto.grpc._log_exporter import OTLPLogExporter
 
-from utils.common import is_enabled, is_not_empty
+from utils.common import is_enabled, is_false, is_not_empty
 
 _otel_tracer = trace.get_tracer(__name__)
 _otel_collector_endpoint = os.getenv('OTEL_COLLECTOR_ENDPOINT')
 _otel_service_name = "imalive-{}".format(os.getenv('IMALIVE_NODE_NAME', "anode"))
 _otel_service_version = os.getenv('VERSION', '0.1')
+_otel_collector_tls_disable_check = is_false(os.getenv('OTEL_COLLECTOR_TLS_CHECK', 'false'))
 
 _otel_collector_username = os.getenv('OTEL_COLLECTOR_USERNAME')
 _otel_collector_password = os.getenv('OTEL_COLLECTOR_PASSWORD')
@@ -56,16 +57,16 @@ def init_otel_tracer():
     trace.set_tracer_provider(TracerProvider(resource=_otel_resource))
 
     if is_enabled(_otel_collector_endpoint):
-        trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=_otel_collector_endpoint, credentials=credentials, insecure=True)))
+        trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=_otel_collector_endpoint, credentials=credentials, insecure=_otel_collector_tls_disable_check)))
 
 def init_otel_metrics():
     if is_enabled(_otel_collector_endpoint):
-        otlp_exporter = OTLPMetricExporter(endpoint=_otel_collector_endpoint, credentials=credentials, insecure=True)
+        otlp_exporter = OTLPMetricExporter(endpoint=_otel_collector_endpoint, credentials=credentials, insecure=_otel_collector_tls_disable_check)
         set_meter_provider(MeterProvider(resource=_otel_resource, metric_readers=[PeriodicExportingMetricReader(otlp_exporter, export_interval_millis=5000)]))
 
 def init_otel_logger():
     if is_enabled(_otel_collector_endpoint):
-        otlp_exporter = OTLPLogExporter(endpoint=_otel_collector_endpoint, credentials=credentials, insecure=True)
+        otlp_exporter = OTLPLogExporter(endpoint=_otel_collector_endpoint, credentials=credentials, insecure=_otel_collector_tls_disable_check)
         _logger_provider.add_log_record_processor(BatchLogRecordProcessor(otlp_exporter))
         handler = LoggingHandler(level=logging.NOTSET, logger_provider=_logger_provider)
         logging.getLogger().addHandler(handler)
