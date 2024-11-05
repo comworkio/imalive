@@ -50,39 +50,6 @@ def is_disabled (var):
 def is_enabled(var):
     return not is_disabled(var)
 
-def exists_entry(dictionary, key):
-    return key in dictionary and is_not_empty(dictionary[key])
-
-def safe_compare_entry(dictionary, key, expected_value):
-    return exists_entry(dictionary, key) and is_not_empty(expected_value) and dictionary[key] == expected_value
-
-def safe_contain_entry(dictionary, key, expected_contained_value):
-    return exists_entry(dictionary, key) and is_not_empty(expected_contained_value) and expected_contained_value in dictionary[key]
-
-def safe_get_entry_with_default(dictionary, key, default_value):
-    return default_value if not exists_entry(dictionary, key) else dictionary[key]
-
-def safe_get_entry(dictionary, key):
-    return safe_get_entry_with_default(dictionary = dictionary, key = key, default_value = None)
-
-def name_from_email(email):
-    first_part = email.split("@")[0]
-    infos = first_part.split(".")
-    return {
-        "first_name": infos[0] if len(infos) > 0 and is_not_empty(infos[0]) else "X.",
-        "last_name": infos[1] if len(infos) > 1 and is_not_empty(infos[1]) else "X."
-    }
-
-def is_response_ok(code):
-    return code >= 200 and code < 400
-
-def is_duration_valid(duration):
-    return is_not_empty(duration) and duration != -1
-
-def unbase64(encoded_data):
-    decoded_content = base64.b64decode(encoded_data)
-    return decoded_content.decode('utf-8')
-
 def is_uuid (var):
     pattern = r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89a-bA-B][0-9a-f]{3}-[0-9a-f]{12}$'
     return bool(re.match(pattern, var))
