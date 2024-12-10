@@ -247,7 +247,8 @@ monitors:
   - type: http
     name: imalive
     url: http://localhost:8081
-    method: GET # optional (GET by default, only POST and GET are supported)
+    method: POST # optional (GET by default, only POST, PUT and GET are supported)
+    body: '{"foo": "bar"}' # optional (body is ignored if method is GET)
     expected_http_code: 200 # optional (200 by default)
     expected_contain: "\"status\":\"ok\"" # optional (no check on the body response if not present)
     timeout: 30 # optional (30 seconds if not present)

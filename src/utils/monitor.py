@@ -51,6 +51,7 @@ def check_http_monitor(monitor, gauges):
     timeout = get_or_else(monitor, 'timeout', 30)
     expected_http_code = get_or_else(monitor, 'expected_http_code', 200)
     expected_contain = get_or_else(monitor, 'expected_contain', None)
+    body = get_or_else(monitor, 'body', None)
     duration = None
     auth = None
     headers = {}
@@ -73,7 +74,11 @@ def check_http_monitor(monitor, gauges):
             duration = response.elapsed.total_seconds()
             set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         elif method == "POST":
-            response = requests.post(monitor['url'], auth=auth, headers=headers, timeout=timeout)
+            response = requests.post(monitor['url'], auth=auth, headers=headers, timeout=timeout, data=body)
+            duration = response.elapsed.total_seconds()
+            set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
+        elif method == "PUT":
+            response = requests.put(monitor['url'], auth=auth, headers=headers, timeout=timeout, data=body)
             duration = response.elapsed.total_seconds()
             set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         else:
