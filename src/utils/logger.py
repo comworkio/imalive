@@ -115,13 +115,15 @@ def quiet_log_msg (log_level, message):
     else:
         logging.info(formatted_log)
 
+    return formatted_log
+
 def is_notif_enabled():
     notifs_providers = ['SLACK', 'DISCORD']
     return any(is_true(os.getenv("{}_TRIGGER".format(n))) for n in notifs_providers)
 
 def log_msg(log_level, message, is_public = False):
-    quiet_log_msg (log_level, message)
+    formatted_log = quiet_log_msg (log_level, message)
 
     if get_int_value_level(log_level) >= get_int_value_level(LOG_LEVEL) and is_notif_enabled():
-        slack_message(log_level, message, is_public)
-        discord_message(log_level, message, is_public)
+        slack_message(log_level, formatted_log, is_public)
+        discord_message(log_level, formatted_log, is_public)
