@@ -244,9 +244,9 @@ In order to use that, just override the `/app/imalive.yml` with the following co
 ```yaml
 ---
 monitors:
-  - type: http
+  - type: http # only http and tcp are supported
     name: imalive
-    url: http://localhost:8081
+    url: http://localhost:8081 # if it's a tcp check, it must looks like host:port
     method: POST # optional (GET by default, only POST, PUT and GET are supported)
     body: '{"foo": "bar"}' # optional (body is ignored if method is GET)
     check_tls: false # optional (true by default)

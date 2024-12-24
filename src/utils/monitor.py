@@ -4,6 +4,8 @@ import yaml
 import requests
 import asyncio
 import threading
+import socket
+import time
 
 import requests
 import yaml
@@ -22,7 +24,7 @@ def check_status_code_pattern(actual_code, pattern):
     regexp = "^{}$".format(pattern.replace('*', '[0-9]+'))
     return bool(re.match(regexp, str(actual_code)))
 
-def check_http_monitor(monitor, gauges):
+def init_vars_monitor(monitor):
     vdate = datetime.now()
 
     labels = {
@@ -30,16 +32,32 @@ def check_http_monitor(monitor, gauges):
         'family': monitor['family'] if is_not_empty_key(monitor, 'family') else monitor['name']
     }
 
-    if monitor['type'] != 'http':
-        log_msg("DEBUG", {
-            "status": "ok",
-            "type": "monitor",
-            "time": vdate.isoformat(),
-            "message": "Not an http monitor",
-            "monitor": monitor 
-        })
-        set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
-        return
+    pmonitor = monitor.copy()
+    del_key_if_exists(pmonitor, 'username')
+    del_key_if_exists(pmonitor, 'password')
+
+    timeout = get_or_else(monitor, 'timeout', 30)
+    level = get_or_else(monitor, 'level', 'DEBUG')
+    if level not in ['INFO', 'DEBUG']:
+        level = 'DEBUG'
+
+    return vdate, labels, pmonitor, level, timeout
+
+def fail_monitor(monitor, gauges):
+    vdate, labels, pmonitor, _, _ = init_vars_monitor(monitor)
+
+    type_monitor = monitor['type'] if is_not_empty_key(monitor, 'type') else "undefined"
+    log_msg("ERROR", {
+        "status": "ko",
+        "type": "monitor",
+        "time": vdate.isoformat(),
+        "message": "Bad configuration of monitor: name = {}, type = {}".format(monitor['name'], type_monitor),
+        "monitor": pmonitor
+    })
+    set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
+
+def check_tcp_monitor(monitor, gauges):
+    vdate, labels, pmonitor, level, timeout = init_vars_monitor(monitor)
 
     if is_empty_key(monitor, 'url'):
         log_msg("ERROR", {
@@ -47,20 +65,68 @@ def check_http_monitor(monitor, gauges):
             "type": "monitor",
             "time": vdate.isoformat(),
             "message": "Missing mandatory url",
-            "monitor": monitor 
+            "monitor": pmonitor
+        })
+        set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
+        return
+
+    if not re.match(r"^[a-zA-Z0-9.-]+:\d+$", monitor['url']):
+        log_msg("ERROR", {
+            "status": "ko",
+            "type": "monitor",
+            "time": vdate.isoformat(),
+            "message": "Incorrect url (expected host:port): actual = {}".format(monitor['url']),
+            "monitor": pmonitor
+        })
+        set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
+        return
+
+    host, port = monitor['url'].split(":")
+    port = int(port)
+
+    try:
+        start_time = time.time()
+        with socket.create_connection((host, port), timeout=timeout):
+            duration = time.time() - start_time
+            set_gauge(gauges['result'], 1, {**labels, 'kind': 'result'})
+            log_msg(level, {
+                "status": "ok",
+                "type": "monitor",
+                "time": vdate.isoformat(),
+                "duration": duration,
+                "message": "Monitor is healthy",
+                "monitor": pmonitor
+            })
+    except (socket.timeout, ConnectionRefusedError, socket.error) as e:
+        duration = time.time() - start_time
+        log_msg("ERROR", {
+            "status": "ko",
+            "type": "monitor",
+            "time": vdate.isoformat(),
+            "message": "Unable to open connection, e.type = {}, e.msg = {}".format(type(e), e),
+            "monitor": pmonitor
+        })
+        set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
+
+def check_http_monitor(monitor, gauges):
+    vdate, labels, pmonitor, level, timeout = init_vars_monitor(monitor)
+
+    if is_empty_key(monitor, 'url'):
+        log_msg("ERROR", {
+            "status": "ko",
+            "type": "monitor",
+            "time": vdate.isoformat(),
+            "message": "Missing mandatory url",
+            "monitor": pmonitor
         })
         set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
         return
 
     method = get_or_else(monitor, 'method', 'GET')
-    timeout = get_or_else(monitor, 'timeout', 30)
     expected_http_code = get_or_else(monitor, 'expected_http_code', '20*')
     expected_contain = get_or_else(monitor, 'expected_contain', None)
     body = get_or_else(monitor, 'body', None)
     check_tls = is_true(get_or_else(monitor, 'check_tls', True))
-    level = get_or_else(monitor, 'level', 'DEBUG')
-    if level not in ['INFO', 'DEBUG']:
-        level = 'DEBUG'
 
     duration = None
     auth = None
@@ -73,10 +139,6 @@ def check_http_monitor(monitor, gauges):
         for header in monitor['headers']:
             if is_not_empty_key(header, 'name') and is_not_empty_key(header, 'value'):
                 headers[sanitize_header_name(header['name'])] = header['value']
-
-    pmonitor = monitor.copy()
-    del_key_if_exists(pmonitor, 'username')
-    del_key_if_exists(pmonitor, 'password')
 
     try:
         if method == "GET":
@@ -169,7 +231,13 @@ def monitors():
                     for monitor in loaded_data['monitors']:
                         if is_empty_key(monitor, 'name'):
                             continue
-                        check_http_monitor(monitor, gauges[monitor['name']])
+
+                        if is_not_empty_key(monitor, 'type') and 'http' == monitor['type']:
+                            check_http_monitor(monitor, gauges[monitor['name']])
+                        elif is_not_empty_key(monitor, 'type') and 'tcp' == monitor['type']:
+                            check_tcp_monitor(monitor, gauges[monitor['name']])
+                        else:
+                            fail_monitor(monitor, gauges[monitor['name']])
                 sleep(WAIT_TIME)
 
     def start_monitors():
