@@ -255,6 +255,7 @@ monitors:
     timeout: 30 # optional (30 seconds if not present)
     username: changeit # optional (no basic auth if not present)
     password: changeit # optional (no basic auth if not present)
+    level: INFO # optional, log level if monitor is healthy (DEBUG by default)
     headers: # optional (no headers if empty)
       - name: Accept
         value: application/json

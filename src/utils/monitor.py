@@ -53,6 +53,7 @@ def check_http_monitor(monitor, gauges):
     expected_contain = get_or_else(monitor, 'expected_contain', None)
     body = get_or_else(monitor, 'body', None)
     check_tls = is_true(get_or_else(monitor, 'check_tls', True))
+    level = get_or_else(monitor, 'level', 'DEBUG')
     duration = None
     auth = None
     headers = {}
@@ -118,7 +119,7 @@ def check_http_monitor(monitor, gauges):
             return
 
         set_gauge(gauges['result'], 1, {**labels, 'kind': 'result'})
-        log_msg("DEBUG", {
+        log_msg(level, {
             "status": "ok",
             "type": "monitor",
             "time": vdate.isoformat(),
