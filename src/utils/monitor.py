@@ -59,6 +59,9 @@ def check_http_monitor(monitor, gauges):
     body = get_or_else(monitor, 'body', None)
     check_tls = is_true(get_or_else(monitor, 'check_tls', True))
     level = get_or_else(monitor, 'level', 'DEBUG')
+    if level not in ['INFO', 'DEBUG']:
+        level = 'DEBUG'
+
     duration = None
     auth = None
     headers = {}
