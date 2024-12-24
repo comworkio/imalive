@@ -11,7 +11,7 @@ from datetime import datetime
 from time import sleep
 from requests.auth import HTTPBasicAuth
 
-from utils.common import is_empty_key, get_or_else, is_not_empty, is_not_empty_key, del_key_if_exists, sanitize_header_name
+from utils.common import is_empty_key, get_or_else, is_not_empty, is_not_empty_key, del_key_if_exists, is_true, sanitize_header_name
 from utils.gauge import create_gauge, set_gauge
 from utils.heartbit import WAIT_TIME
 from utils.logger import log_msg
@@ -52,6 +52,7 @@ def check_http_monitor(monitor, gauges):
     expected_http_code = get_or_else(monitor, 'expected_http_code', 200)
     expected_contain = get_or_else(monitor, 'expected_contain', None)
     body = get_or_else(monitor, 'body', None)
+    check_tls = is_true(get_or_else(monitor, 'check_tls', True))
     duration = None
     auth = None
     headers = {}
@@ -70,15 +71,15 @@ def check_http_monitor(monitor, gauges):
 
     try:
         if method == "GET":
-            response = requests.get(monitor['url'], auth=auth, headers=headers, timeout=timeout)
+            response = requests.get(monitor['url'], auth=auth, headers=headers, timeout=timeout, verify=check_tls)
             duration = response.elapsed.total_seconds()
             set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         elif method == "POST":
-            response = requests.post(monitor['url'], auth=auth, headers=headers, timeout=timeout, data=body)
+            response = requests.post(monitor['url'], auth=auth, headers=headers, timeout=timeout, data=body, verify=check_tls)
             duration = response.elapsed.total_seconds()
             set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         elif method == "PUT":
-            response = requests.put(monitor['url'], auth=auth, headers=headers, timeout=timeout, data=body)
+            response = requests.put(monitor['url'], auth=auth, headers=headers, timeout=timeout, data=body, verify=check_tls)
             duration = response.elapsed.total_seconds()
             set_gauge(gauges['duration'], duration, {**labels, 'kind': 'duration'})
         else:
