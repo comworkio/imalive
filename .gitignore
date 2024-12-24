@@ -19,8 +19,6 @@ __pycache__
 *.iml
 .idea
 
-imalive.yml
-
 # Eclipse Core
 .project
 

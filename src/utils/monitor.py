@@ -1,4 +1,5 @@
 import os
+import re
 import yaml
 import requests
 import asyncio
@@ -16,6 +17,10 @@ from utils.gauge import create_gauge, set_gauge
 from utils.heartbit import WAIT_TIME
 from utils.logger import log_msg
 from utils.otel import get_otel_tracer
+
+def check_status_code_pattern(actual_code, pattern):
+    regexp = "^{}$".format(pattern.replace('*', '[0-9]+'))
+    return bool(re.match(regexp, str(actual_code)))
 
 def check_http_monitor(monitor, gauges):
     vdate = datetime.now()
@@ -49,7 +54,7 @@ def check_http_monitor(monitor, gauges):
 
     method = get_or_else(monitor, 'method', 'GET')
     timeout = get_or_else(monitor, 'timeout', 30)
-    expected_http_code = get_or_else(monitor, 'expected_http_code', 200)
+    expected_http_code = get_or_else(monitor, 'expected_http_code', '20*')
     expected_contain = get_or_else(monitor, 'expected_contain', None)
     body = get_or_else(monitor, 'body', None)
     check_tls = is_true(get_or_else(monitor, 'check_tls', True))
@@ -94,7 +99,7 @@ def check_http_monitor(monitor, gauges):
             set_gauge(gauges['result'], 0, {**labels, 'kind': 'result'})
             return
 
-        if response.status_code != expected_http_code:
+        if not check_status_code_pattern(response.status_code, expected_http_code):
             log_msg("ERROR", {
                 "status": "ko",
                 "type": "monitor",
